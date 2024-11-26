@@ -1,0 +1,1671 @@
+#visulization
+#percenta value and business line WITH PIE CHART
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first pie chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Pie Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage
+labels1 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Total_Loss'] / total_loss_sum) * 100)
+]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second pie chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Pie Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage
+labels2 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Event_Frequency'] / event_frequency_sum) * 100)
+]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+#percenta value and business line WITH DOUNT CHART
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first donut chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5, 'width': 0.3}  # Border for each wedge, and create the hole
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage for Total Loss
+labels1 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Total_Loss'] / total_loss_sum) * 100)
+]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second donut chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5, 'width': 0.3}  # Border for each wedge, and create the hole
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Donut Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage for Event Frequency
+labels2 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Event_Frequency'] / event_frequency_sum) * 100)
+]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+ 
+ 
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first donut chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},    # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart for Total Loss
+centre_circle1 = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+axs[0].add_artist(centre_circle1)
+
+# Title for the Total Loss chart
+axs[0].set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Plot the second donut chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},    # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart for Event Frequency
+centre_circle2 = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+axs[1].add_artist(centre_circle2)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Donut Chart of Event Frequency by Business Line", fontsize=16)
+
+# Create the legend for the Total Loss chart outside the graph
+labels1 = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total_Loss'])]
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=False, title_fontsize=12
+)
+
+# Create the legend for the Event Frequency chart outside the graph
+labels2 = [f"{label}: {freq:,.0f}" for label, freq in zip(business_line_summary['Business Line'], business_line_summary['Event_Frequency'])]
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=False, title_fontsize=12
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+#### same for Pi chart WITH NUMBER WITHOU BORDER LINE
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first pie chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Pie Chart of Total Loss by Business Line", fontsize=16)
+
+# Plot the second pie chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    # textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+    
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Pie Chart of Event Frequency by Business Line", fontsize=16)
+
+# Create the legend for the Total Loss chart outside the graph
+labels1 = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total_Loss'])]
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=False, title_fontsize=12
+)
+
+# Create the legend for the Event Frequency chart outside the graph
+labels2 = [f"{label}: {freq:,.0f}" for label, freq in zip(business_line_summary['Business Line'], business_line_summary['Event_Frequency'])]
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=False, title_fontsize=12
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first pie chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Pie Chart of Total Loss by Business Line", fontsize=16)
+
+# Plot the second pie chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Pie Chart of Event Frequency by Business Line", fontsize=16)
+
+# Create the legend for the Total Loss chart outside the graph
+labels1 = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total_Loss'])]
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Create the legend for the Event Frequency chart outside the graph
+labels2 = [f"{label}: {freq:,.0f}" for label, freq in zip(business_line_summary['Business Line'], business_line_summary['Event_Frequency'])]
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+ 
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first pie chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Pie Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate percentages for the legend
+labels1 = [f"{label}: {loss:,.0f} ({(loss/total_loss_sum)*100:.1f}%)" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total_Loss'])]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second pie chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Pie Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate percentages for the legend
+labels2 = [f"{label}: {freq:,.0f} ({(freq/event_frequency_sum)*100:.1f}%)" for label, freq in zip(business_line_summary['Business Line'], business_line_summary['Event_Frequency'])]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+ 
+percenta value and business line name in legened
+#percenta va;lue and business line nae
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first pie chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Pie Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage
+labels1 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Total_Loss'] / total_loss_sum) * 100)
+]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second pie chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Pie Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage
+labels2 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Event_Frequency'] / event_frequency_sum) * 100)
+]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+ 
+# add only percentage value in legend
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first pie chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Pie Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate percentages for the legend (only percentages)
+labels1 = [f"{(loss/total_loss_sum)*100:.1f}%" for loss in business_line_summary['Total_Loss']]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second pie chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5}  # Border for each wedge
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Pie Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate percentages for the legend (only percentages)
+labels2 = [f"{(freq/event_frequency_sum)*100:.1f}%" for freq in business_line_summary['Event_Frequency']]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+ 
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first donut chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5, 'width': 0.3}  # Border for each wedge, and create the hole
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage for Total Loss
+labels1 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Total_Loss'] / total_loss_sum) * 100)
+]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second donut chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5, 'width': 0.3}  # Border for each wedge, and create the hole
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Donut Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name and Percentage for Event Frequency
+labels2 = [
+    f"{name}: {percent:.1f}%" 
+    for name, percent in zip(business_line_summary['Business Line'], 
+                             (business_line_summary['Event_Frequency'] / event_frequency_sum) * 100)
+]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Calculate percentages for Total Loss and Event Frequency
+total_loss_sum = business_line_summary['Total_Loss'].sum()
+event_frequency_sum = business_line_summary['Event_Frequency'].sum()
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first donut chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5, 'width': 0.3}  # Border for each wedge, and create the hole
+)
+
+# Title for the Total Loss chart
+axs[0].set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name, Amount, and Percentage for Total Loss
+labels1 = [
+    f"{name}: ${total_loss:.2f} ({percent:.1f}%)"
+    for name, total_loss, percent in zip(business_line_summary['Business Line'], 
+                                          business_line_summary['Total_Loss'],
+                                          (business_line_summary['Total_Loss'] / total_loss_sum) * 100)
+]
+
+# Create the legend for the Total Loss chart outside the graph
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Plot the second donut chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+    wedgeprops={'edgecolor': 'black', 'linewidth': 1.5, 'width': 0.3}  # Border for each wedge, and create the hole
+)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Donut Chart of Event Frequency by Business Line", fontsize=16)
+
+# Calculate legend labels: Business Line Name, Frequency, and Percentage for Event Frequency
+labels2 = [
+    f"{name}: {frequency} events ({percent:.1f}%)"
+    for name, frequency, percent in zip(business_line_summary['Business Line'], 
+                                        business_line_summary['Event_Frequency'],
+                                        (business_line_summary['Event_Frequency'] / event_frequency_sum) * 100)
+]
+
+# Create the legend for the Event Frequency chart outside the graph
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=True, title_fontsize=12, edgecolor='black'  # Set border for legend
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Sort the data by Total Loss (optional)
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line using a dictionary
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Insurance': '#66B3FF',
+    'Telecom': '#99FF99',
+    'Finance': '#FFCC99',
+    'Healthcare': '#FF9966',
+    'Manufacturing': '#FF6600',
+    'Energy': '#CC99FF',
+    'Transportation': '#FFCCFF',
+    'Hospitality': '#66FF66',
+    'Agriculture': '#FF6666',
+    'Technology': '#FF6600',
+    'Real Estate': '#CCFF33'
+    # Add more business lines and their colors as needed
+}
+
+# Create the figure with two subplots: one for Total Loss and one for Event Frequency
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first donut chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for each business line (Total Loss)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},    # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart for Total Loss
+centre_circle1 = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+axs[0].add_artist(centre_circle1)
+
+# Title for the Total Loss chart
+axs[0].set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Plot the second donut chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for each business line (Event Frequency)
+    labels=business_line_summary['Business Line'],      # Business line names
+    autopct='%1.1f%%',                                  # Display percentage labels
+    startangle=90,                                      # Start angle for the chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from the dictionary
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},    # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart for Event Frequency
+centre_circle2 = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+axs[1].add_artist(centre_circle2)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Donut Chart of Event Frequency by Business Line", fontsize=16)
+
+# Create the legend outside the graph for both charts
+labels1 = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total_Loss'])]
+labels2 = [f"{label}: {freq:,.0f}" for label, freq in zip(business_line_summary['Business Line'], business_line_summary['Event_Frequency'])]
+
+# Adjust the placement of the legends outside the graph
+
+ 
+ 
+# Import required libraries
+import pandas as pd
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set a random seed for reproducibility
+random.seed(42)
+np.random.seed(42)
+
+# Constants
+num_records = 10000
+
+# Updated business lines and event types
+business_lines = [
+    'Retail', 'Insurance', 'Telecom', 'Finance', 'Healthcare',
+    'Manufacturing', 'Energy', 'Transportation', 'Hospitality',
+    'Agriculture', 'Technology', 'Real Estate'
+]
+
+event_types = [
+    'Fraud', 'System Failure', 'Regulatory', 'Data Breach',
+    'Natural Disaster', 'Operational Error', 'Market Risk', 
+    'Cyber Attack', 'Supply Chain Disruption', 'Theft', 
+    'Compliance Violation', 'Equipment Failure'
+]
+
+# Generate dummy data
+data = {
+    'Date': pd.date_range(start='2015-01-01', periods=num_records, freq='D'),
+    'Business Line': [random.choice(business_lines) for _ in range(num_records)],
+    'Event Type': [random.choice(event_types) for _ in range(num_records)],
+    'Event Description': [f"{event_type} occurred in {random.choice(business_lines)} sector." for event_type in random.choices(event_types, k=num_records)],
+    'Event Net Loss Amount': [round(random.uniform(1000, 100000), 2) for _ in range(num_records)]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Aggregate data by Business Line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Event Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Type', 'count')
+).reset_index()
+
+# Set a fixed color map for Business Lines
+fixed_colors = {
+    'Retail': '#FF9999', 'Insurance': '#66B2FF', 'Telecom': '#99FF99', 
+    'Finance': '#FFCC99', 'Healthcare': '#C0C0C0', 'Manufacturing': '#FF6666',
+    'Energy': '#FFFF99', 'Transportation': '#FFB6C1', 'Hospitality': '#6A5ACD',
+    'Agriculture': '#FFD700', 'Technology': '#87CEEB', 'Real Estate': '#FFA07A'
+}
+
+# Assign colors based on Business Lines
+business_line_summary['Color'] = business_line_summary['Business Line'].map(fixed_colors)
+
+# Plot Total Loss Distribution
+plt.figure(figsize=(10, 6))
+plt.pie(
+    business_line_summary['Total_Loss'], 
+    labels=business_line_summary['Business Line'],
+    autopct='%1.1f%%', 
+    colors=business_line_summary['Color'],
+    startangle=140
+)
+plt.title('Total Loss Distribution by Business Line', fontsize=16)
+plt.legend(
+    loc='upper right', 
+    bbox_to_anchor=(1.8, 0.8), 
+    labels=[
+        f"{row['Business Line']}: ${row['Total_Loss']:.2f}" 
+        for _, row in business_line_summary.iterrows()
+    ],
+    fontsize=10
+)
+plt.tight_layout()
+plt.show()
+
+# Plot Event Frequency Distribution
+plt.figure(figsize=(10, 6))
+plt.pie(
+    business_line_summary['Event_Frequency'], 
+    labels=business_line_summary['Business Line'],
+    autopct='%1.1f%%', 
+    colors=business_line_summary['Color'],
+    startangle=140
+)
+plt.title('Event Frequency Distribution by Business Line', fontsize=16)
+plt.legend(
+    loc='upper right', 
+    bbox_to_anchor=(1.8, 0.8), 
+    labels=[
+        f"{row['Business Line']}: {row['Event_Frequency']} events" 
+        for _, row in business_line_summary.iterrows()
+    ],
+    fontsize=10
+)
+plt.tight_layout()
+plt.show()
+
+
+Business Line	Hex Code	Color Name
+Retail	#FF9999	Light Pink
+Insurance	#66B2FF	Sky Blue
+Telecom	#99FF99	Light Green
+Finance	#FFCC99	Peach
+Healthcare	#C0C0C0	Silver
+Manufacturing	#FF6666	Salmon
+Energy	#FFFF99	Light Yellow
+Transportation	#FFB6C1	Light Coral
+Hospitality	#6A5ACD	Slate Blue
+Agriculture	#FFD700	Gold
+Technology	#87CEEB	Light Sky Blue
+Real Estate	#FFA07A	Light Salmon
+
+
+###
+Category	Hex Code	Color Name
+Category 1	#FF9999	Light Pink
+Category 2	#66B2FF	Sky Blue
+Category 3	#99FF99	Light Green
+Category 4	#FFCC99	Peach
+Category 5	#C0C0C0	Silver
+Category 6	#FF6666	Salmon
+Category 7	#FFFF99	Light Yellow
+Category 8	#FFB6C1	Light Coral
+Category 9	#6A5ACD	Slate Blue
+Category 10	#FFD700	Gold
+Category 11	#87CEEB	Light Sky Blue
+Category 12	#FFA07A	Light Salmon
+Category 13	#8A2BE2	Blue Violet
+Category 14	#40E0D0	Turquoise
+Category 15	#6495ED	Cornflower Blue
+Category 16	#DC143C	Crimson
+Category 17	#00FA9A	Medium Spring Green
+Category 18	#B8860B	Dark Goldenrod
+Category 19	#32CD32	Lime Green
+Category 20	#800080	Purple
+Category 21	#00CED1	Dark Turquoise
+Category 22	#FF4500	Orange Red
+Category 23	#4682B4	Steel Blue
+Category 24	#DA70D6	Orchid
+Category 25	#A52A2A	Brown
+Category 26	#5F9EA0	Cadet Blue
+Category 27	#D2691E	Chocolate
+Category 28	#1E90FF	Dodger Blue
+Category 29	#FF6347	Tomato
+Category 30	#2E8B57	Sea Green
+#with border
+import pandas as pd
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+
+# Set a random seed for reproducibility
+random.seed(42)
+np.random.seed(42)
+
+# Constants
+num_records = 10000
+
+# Updated business lines
+business_lines = [
+    'Retail', 'Insurance', 'Telecom', 'Finance', 'Healthcare',
+    'Manufacturing', 'Energy', 'Transportation', 'Hospitality',
+    'Agriculture', 'Technology', 'Real Estate'
+]
+
+# Generate dummy data
+data = {
+    'Date': pd.date_range(start='2015-01-01', periods=num_records, freq='D'),
+    'Business Line': [random.choice(business_lines) for _ in range(num_records)],
+    'Event Net Loss Amount': [round(random.uniform(1000, 100000), 2) for _ in range(num_records)]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Business Line
+business_line_summary = df.groupby('Business Line')['Event Net Loss Amount'].agg(['sum', 'count']).reset_index()
+business_line_summary.rename(columns={'sum': 'Total Loss', 'count': 'Event Frequency'}, inplace=True)
+
+# Define fixed colors for each business line
+fixed_colors = {
+    'Retail': '#FF9999', 'Insurance': '#66B2FF', 'Telecom': '#99FF99',
+    'Finance': '#FFCC99', 'Healthcare': '#C0C0C0', 'Manufacturing': '#FF6666',
+    'Energy': '#FFFF99', 'Transportation': '#FFB6C1', 'Hospitality': '#6A5ACD',
+    'Agriculture': '#FFD700', 'Technology': '#87CEEB', 'Real Estate': '#FFA07A'
+}
+
+# Sort by Total Loss for consistent coloring
+business_line_summary['Color'] = business_line_summary['Business Line'].map(fixed_colors)
+
+# Plot percentage distribution of Total Loss
+plt.figure(figsize=(10, 8))
+plt.pie(
+    business_line_summary['Total Loss'],
+    labels=business_line_summary['Business Line'],
+    autopct='%1.1f%%',  # Display percentage
+    startangle=90,      # Start angle for better readability
+    colors=business_line_summary['Color'],  # Use fixed colors
+    wedgeprops={'edgecolor': 'black'}  # Add a black border for better separation
+)
+
+# Add a title
+plt.title("Percentage Distribution of Total Loss by Business Line", fontsize=14)
+
+# Add legend to the right
+plt.legend(
+    business_line_summary['Business Line'], 
+    title="Business Lines", 
+    bbox_to_anchor=(1.2, 0.5), loc="center right"
+)
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+# Sort data by Total Loss
+business_line_summary = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Plot horizontal bar chart
+plt.figure(figsize=(12, 8))
+bars = plt.barh(
+    business_line_summary['Business Line'],
+    business_line_summary['Total Loss'],
+    color=business_line_summary['Color'],
+    edgecolor='black'
+)
+
+# Add percentage labels to the bars
+for bar, value in zip(bars, business_line_summary['Total Loss']):
+    plt.text(
+        bar.get_width() + 1000,  # Position to the right of the bar
+        bar.get_y() + bar.get_height() / 2,
+        f"{value:,.0f} ({value / business_line_summary['Total Loss'].sum() * 100:.1f}%)",
+        va='center',
+        fontsize=10
+    )
+
+# Title and labels
+plt.title("Total Loss by Business Line", fontsize=16)
+plt.xlabel("Total Loss (in currency)", fontsize=12)
+plt.ylabel("Business Line", fontsize=12)
+plt.tight_layout()
+plt.show()
+
+!pip install squarify
+Collecting squarify
+  Downloading squarify-0.4.4-py3-none-any.whl.metadata (600 bytes)
+Downloading squarify-0.4.4-py3-none-any.whl (4.1 kB)
+Installing collected packages: squarify
+Successfully installed squarify-0.4.4
+[notice] A new release of pip is available: 24.0 -> 24.3.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+import squarify  # Install with pip if not already available
+
+# Prepare data for treemap
+treemap_data = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Plot treemap
+plt.figure(figsize=(12, 8))
+squarify.plot(
+    sizes=treemap_data['Total Loss'],
+    label=[
+        f"{line}\n{value:,.0f} ({value / business_line_summary['Total Loss'].sum() * 100:.1f}%)"
+        for line, value in zip(treemap_data['Business Line'], treemap_data['Total Loss'])
+    ],
+    color=treemap_data['Color'],
+    alpha=0.8
+)
+
+# Title
+plt.title("Treemap of Total Loss by Business Line", fontsize=16)
+plt.axis('off')  # Hide axes
+plt.show()
+
+# Calculate percentage contribution
+business_line_summary['Percentage'] = (
+    business_line_summary['Total Loss'] / business_line_summary['Total Loss'].sum()
+) * 100
+
+# Plot stacked bar chart
+plt.figure(figsize=(10, 6))
+plt.bar(
+    ['Total Loss'], 
+    business_line_summary['Percentage'],
+    color=business_line_summary['Color'],
+    edgecolor='black'
+)
+
+# Add labels
+for i, (percent, line) in enumerate(zip(business_line_summary['Percentage'], business_line_summary['Business Line'])):
+    plt.text(
+        0, 
+        sum(business_line_summary['Percentage'][:i]) + percent / 2,  # Center of the segment
+        f"{line}\n{percent:.1f}%",
+        ha='center',
+        fontsize=10
+    )
+
+# Title and axis
+plt.title("100% Stacked Bar Chart of Business Line Contributions", fontsize=16)
+plt.ylabel("Percentage", fontsize=12)
+plt.xticks([])
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_17876\4064437108.py:29: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
+  plt.tight_layout()
+
+import seaborn as sns
+
+# Prepare data for heatmap
+heatmap_data = business_line_summary.set_index('Business Line')[['Total Loss', 'Event Frequency']]
+
+# Normalize data for better contrast
+heatmap_data_normalized = heatmap_data / heatmap_data.max()
+
+# Plot heatmap
+plt.figure(figsize=(10, 6))
+sns.heatmap(
+    heatmap_data_normalized,
+    annot=True,
+    cmap='coolwarm',
+    fmt='.2f',
+    linewidths=0.5
+)
+
+# Title
+plt.title("Heatmap of Total Loss and Event Frequency by Business Line", fontsize=16)
+plt.show()
+
+import matplotlib.pyplot as plt
+
+# Sort data by 'Total Loss' to ensure it appears in descending order
+business_line_summary = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Create the lollipop chart
+plt.figure(figsize=(12, 8))
+
+# Create stem plot with blue dashed lines and circular markers
+plt.stem(
+    range(len(business_line_summary['Business Line'])),  # X-coordinates
+    business_line_summary['Total Loss'],                # Y-coordinates
+    linefmt="--b",  # Blue dashed line
+    basefmt=" ",    # No base line
+    markerfmt="ob"  # Blue circle markers
+)
+
+# Adjust X-axis to remove ticks and make it look cleaner
+plt.xticks([])
+
+# Set Y-axis labels and limits
+plt.ylabel("Total Loss (in currency)", fontsize=12)
+plt.ylim(0, business_line_summary['Total Loss'].max() + business_line_summary['Total Loss'].max() * 0.1)
+
+# Title
+plt.title("Lollipop Chart of Total Loss by Business Line", fontsize=16)
+
+# Add labels outside the plot (on the right side)
+for i, value in enumerate(business_line_summary['Total Loss']):
+    plt.text(
+        len(business_line_summary['Business Line']) + 0.5,  # X position for labels, placed further out
+        business_line_summary['Total Loss'].iloc[i],  # Y position matches the lollipop
+        f"{business_line_summary['Business Line'].iloc[i]}: {value:,.0f}",  # Custom label with value
+        fontsize=10,
+        verticalalignment='center',
+        horizontalalignment='left',  # Align text to the left for proper spacing
+        color='black',  # Text color
+        fontweight='bold',  # Make the text bold for better readability
+        backgroundcolor='white',  # Optional: Make background white for better visibility
+        fontname='Arial'  # Optional: Specify font for consistency
+    )
+
+# Display chart with tight layout to avoid clipping
+plt.tight_layout()
+
+# Show the chart
+plt.show()
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Sort the data by 'Total Loss' for better visualization (optional)
+business_line_summary = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Manually define colors for each business line. You can change these colors based on your preference.
+# Ensure there is a unique color for each business line (same order as in business_lines list)
+fixed_colors = [
+    '#FF9999', '#66B3FF', '#99FF99', '#FFCC99', '#FF9966', 
+    '#FF6600', '#CC99FF', '#FFCCFF', '#66FF66', '#FF6666', 
+    '#FF6600', '#CCFF33', '#FF99CC', '#FF6666', '#99CCFF', 
+    '#66CCFF', '#CCCCFF', '#FF3366', '#9966FF', '#FF66CC',
+    '#99CC66', '#FF6633', '#FF33CC', '#66FF33', '#FFCC66',
+    '#FF99FF', '#FF3366', '#6699FF', '#FF6666', '#33CCFF', 
+    '#99FF66'
+]
+
+# Create the figure and axes for the donut chart
+fig, ax = plt.subplots(figsize=(12, 8), nrows=1, ncols=1)
+
+# Plot the donut chart using the fixed colors for each business line
+wedges, texts, autotexts = ax.pie(
+    business_line_summary['Total Loss'],               # Data for each business line
+    labels=business_line_summary['Business Line'],     # Business line names
+    autopct='%1.1f%%',                                 # Display percentage labels
+    startangle=90,                                     # Start angle for the chart
+    colors=fixed_colors,                               # Fixed colors for each business line
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},   # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart
+centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+fig.gca().add_artist(centre_circle)
+
+# Add a title
+ax.set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Create the legend outside the graph with the corresponding total loss values
+labels = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total Loss'])]
+ax.legend(labels, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Business Line Legend")
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+ 
+ 
+ 
+import matplotlib.pyplot as plt
+
+# Sort the data by 'Total Loss' for better visualization (optional)
+business_line_summary = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Define colors for each business line (you can customize these colors)
+colors = [
+    '#FF9999', '#66B3FF', '#99FF99', '#FFCC99', '#FF9966', '#FF6600', '#CC99FF', 
+    '#FFCCFF', '#66FF66', '#FF6666', '#FF6600', '#CCFF33'
+]
+
+# Create the figure and axes for the donut charts
+fig, ax = plt.subplots(figsize=(12, 8), nrows=1, ncols=1)
+
+# Plot the donut chart
+wedges, texts, autotexts = ax.pie(
+    business_line_summary['Total Loss'],               # Data for each business line
+    labels=business_line_summary['Business Line'],     # Business line names
+    autopct='%1.1f%%',                                 # Display percentage labels
+    startangle=90,                                     # Start angle for the chart
+    colors=colors,                                     # Colors for each wedge
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},   # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart
+centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+fig.gca().add_artist(centre_circle)
+
+# Add a title
+ax.set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Create the legend outside the graph
+# Each label will show the business line name along with its total loss value
+labels = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total Loss'])]
+ax.legend(labels, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Business Line Legend")
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+ 
+import matplotlib.pyplot as plt
+
+# Sort the data by 'Total Loss' for better visualization (optional)
+business_line_summary = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Define colors for each business line (you can customize these colors)
+colors = [
+    '#FF9999', '#66B3FF', '#99FF99', '#FFCC99', '#FF9966', '#FF6600', '#CC99FF', 
+    '#FFCCFF', '#66FF66', '#FF6666', '#FF6600', '#CCFF33'
+]
+
+# Create the figure and axes for the donut charts
+fig, ax = plt.subplots(figsize=(12, 8), nrows=1, ncols=1)
+
+# Plot the donut chart
+wedges, texts, autotexts = ax.pie(
+    business_line_summary['Total Loss'],               # Data for each business line
+    labels=business_line_summary['Business Line'],     # Business line names
+    autopct='%1.1f%%',                                 # Display percentage labels
+    startangle=90,                                     # Start angle for the chart
+    colors=colors,                                     # Colors for each wedge
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},   # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart
+centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+fig.gca().add_artist(centre_circle)
+
+# Add a title
+ax.set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Manually position labels on the right side
+# Loop through the wedges to add the labels outside the chart
+for i, (wedge, label) in enumerate(zip(wedges, business_line_summary['Business Line'])):
+    # Get the angle of the wedge (theta) to calculate position
+    angle = (wedge.theta2 + wedge.theta1) / 2
+    x_pos = 1.1 * np.cos(np.radians(angle))  # Move label to the right side
+    y_pos = 1.1 * np.sin(np.radians(angle))
+    
+    # Add the label with the total loss value
+    ax.text(
+        x_pos, y_pos,
+        f"{label}: {business_line_summary['Total Loss'].iloc[i]:,.0f}",
+        horizontalalignment='left',  # Align the label text to the left of the point
+        verticalalignment='center',
+        fontsize=10, fontweight='bold',
+        color='black',
+        fontname='Arial'
+    )
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+
+# Sort the data by 'Total Loss' for better visualization (optional)
+business_line_summary = business_line_summary.sort_values(by='Total Loss', ascending=False)
+
+# Define colors for each business line (you can customize these colors)
+colors = [
+    '#FF9999', '#66B3FF', '#99FF99', '#FFCC99', '#FF9966', '#FF6600', '#CC99FF', 
+    '#FFCCFF', '#66FF66', '#FF6666', '#FF6600', '#CCFF33'
+]
+
+# Create the figure and axes for the donut charts
+fig, ax = plt.subplots(figsize=(12, 8), nrows=1, ncols=1)
+
+# Plot the donut chart
+wedges, texts, autotexts = ax.pie(
+    business_line_summary['Total Loss'],               # Data for each business line
+    labels=business_line_summary['Business Line'],     # Business line names
+    autopct='%1.1f%%',                                 # Display percentage labels
+    startangle=90,                                     # Start angle for the chart
+    colors=colors,                                     # Colors for each wedge
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},   # Create a hole in the center (donut shape)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'},  # Label text properties
+)
+
+# Add the center circle to make it a donut chart
+centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+fig.gca().add_artist(centre_circle)
+
+# Add a title
+ax.set_title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+
+ 
+import matplotlib.pyplot as plt
+
+# Prepare data
+# Assuming `business_line_summary` has the necessary data such as `Business Line` and `Total Loss`
+labels = business_line_summary['Business Line']
+sizes = business_line_summary['Total Loss']
+colors = business_line_summary['Color']  # Colors defined earlier
+
+# Create a figure and axis
+fig, ax = plt.subplots(figsize=(8, 8))
+
+# Create a pie chart, but with a 'wedge' in the center to create a donut
+wedges, texts, autotexts = ax.pie(
+    sizes, 
+    labels=labels, 
+    autopct='%1.1f%%',  # Show percentages with 1 decimal place
+    startangle=90,      # Start the pie chart at 90 degrees
+    colors=colors,      # Color defined earlier
+    wedgeprops={'width': 0.4}  # Create the donut shape
+)
+
+# Add labels outside the donut
+for text in texts:
+    text.set(fontsize=12, weight='bold', color='white')  # Style labels
+
+# Add percentage values inside the wedges
+for autotext in autotexts:
+    autotext.set(fontsize=10, weight='bold', color='black')  # Style percentage labels
+
+# Equal aspect ratio ensures that pie is drawn as a circle.
+ax.axis('equal')  
+
+# Title
+plt.title("Donut Chart of Total Loss by Business Line", fontsize=16)
+
+# Show plot
+plt.tight_layout()
+plt.show()
+
+ 
+ 
+# Threshold for grouping small categories
+threshold = 0.01  # 1%
+
+# Calculate the percentage distribution
+business_line_summary['Percentage'] = (
+    business_line_summary['Total Loss'] / business_line_summary['Total Loss'].sum()
+)
+
+# Group small percentages into "Other"
+small_categories = business_line_summary[business_line_summary['Percentage'] < threshold]
+other_total_loss = small_categories['Total Loss'].sum()
+
+# Filter large categories
+large_categories = business_line_summary[business_line_summary['Percentage'] >= threshold]
+
+# Add "Other" category
+large_categories = pd.concat(
+    [
+        large_categories,
+        pd.DataFrame({
+            'Business Line': ['Other'],
+            'Total Loss': [other_total_loss],
+            'Event Frequency': [small_categories['Event Frequency'].sum()],
+            'Color': ['#D3D3D3'],  # Grey for "Other"
+            'Percentage': [other_total_loss / business_line_summary['Total Loss'].sum()]
+        })
+    ],
+    ignore_index=True
+)
+
+# Plot pie chart
+plt.figure(figsize=(10, 8))
+plt.pie(
+    large_categories['Total Loss'],
+    labels=large_categories['Business Line'],
+    autopct=lambda p: f'{p:.1f}%\n({p * large_categories["Total Loss"].sum() / 100:,.0f})',  # Show % and absolute value
+    startangle=90,
+    colors=large_categories['Color'],
+    wedgeprops={'edgecolor': 'black'}
+)
+plt.title("Percentage Distribution of Total Loss by Business Line (Grouped)", fontsize=14)
+plt.tight_layout()
+plt.show()
+
+# Threshold for grouping small categories
+threshold = 0.01  # 1%
+
+# Calculate the percentage distribution
+business_line_summary['Percentage'] = (
+    business_line_summary['Total Loss'] / business_line_summary['Total Loss'].sum()
+)
+
+# Group small percentages into "Other"
+small_categories = business_line_summary[business_line_summary['Percentage'] < threshold]
+other_total_loss = small_categories['Total Loss'].sum()
+
+# Filter large categories
+large_categories = business_line_summary[business_line_summary['Percentage'] >= threshold]
+
+# Add "Other" category
+large_categories = pd.concat(
+    [
+        large_categories,
+        pd.DataFrame({
+            'Business Line': ['Other'],
+            'Total Loss': [other_total_loss],
+            'Event Frequency': [small_categories['Event Frequency'].sum()],
+            'Color': ['#D3D3D3'],  # Grey for "Other"
+            'Percentage': [other_total_loss / business_line_summary['Total Loss'].sum()]
+        })
+    ],
+    ignore_index=True
+)
+
+# Plot pie chart
+plt.figure(figsize=(10, 8))
+plt.pie(
+    large_categories['Total Loss'],
+    labels=large_categories['Business Line'],
+    autopct=lambda p: f'{p:.1f}%\n({p * large_categories["Total Loss"].sum() / 100:,.0f})',  # Show % and absolute value
+    startangle=90,
+    colors=large_categories['Color'],
+    wedgeprops={'edgecolor': 'black'}
+)
+plt.title("Percentage Distribution of Total Loss by Business Line (Grouped)", fontsize=14)
+plt.tight_layout()
+plt.show()
+
+ 
