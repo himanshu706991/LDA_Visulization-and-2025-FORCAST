@@ -1,0 +1,507 @@
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+from scipy import stats
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Ensure 'Date' is in datetime format
+df['Date'] = pd.to_datetime(df['Date'])
+
+# Step 1: Filter data for the years 2021 to 2024
+filtered_data = df[(df['Date'] >= "2021-01-01") & (df['Date'] <= "2024-12-31")]
+
+# Step 2: Group data by Business Line for Event Count and Net Loss
+summary = filtered_data.groupby("Business Line").agg(
+    Event_Count=("Unique Event ID", "count"),
+    Net_Loss=("Net Loss Amount", "sum")
+).reset_index()
+
+# Normalize bubble sizes for visualization
+summary["Bubble_Size_Event"] = (summary["Event_Count"] / summary["Event_Count"].max()) * 1000
+summary["Bubble_Size_Loss"] = (summary["Net_Loss"] / summary["Net_Loss"].max()) * 1000
+
+# Step 3: Bubble plot for Event Counts
+plt.figure(figsize=(12, 8))
+plt.scatter(
+    summary["Business Line"], summary["Event_Count"],
+    s=summary["Bubble_Size_Event"], alpha=0.6, color="green", edgecolors="black"
+)
+plt.title("Event Counts Distribution (2021-2024)", fontsize=16)
+plt.xlabel("Business Line", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+plt.xticks(rotation=45, ha="right")
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.show()
+
+# Step 4: Bubble plot for Net Loss
+plt.figure(figsize=(12, 8))
+plt.scatter(
+    summary["Business Line"], summary["Net_Loss"],
+    s=summary["Bubble_Size_Loss"], alpha=0.6, color="blue", edgecolors="black"
+)
+plt.title("Net Loss Distribution (2021-2024)", fontsize=16)
+plt.xlabel("Business Line", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+plt.xticks(rotation=45, ha="right")
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.show()
+
+C:\Users\Himanshu Singh\AppData\Local\Programs\Python\Python312\Lib\site-packages\matplotlib\collections.py:996: RuntimeWarning: invalid value encountered in sqrt
+  scale = np.sqrt(self._sizes) * dpi / 72.0 * self._factor
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Ensure 'Date' is in datetime format
+df['Date'] = pd.to_datetime(df['Date'])
+
+# Step 1: Filter data for the years 2021 to 2024
+filtered_data = df[(df['Date'] >= "2021-01-01") & (df['Date'] <= "2024-12-31")]
+
+# Step 2: Group data by Business Line for Event Count and Net Loss
+summary = filtered_data.groupby("Business Line").agg(
+    Event_Count=("Unique Event ID", "count"),
+    Net_Loss=("Net Loss Amount", "sum")
+).reset_index()
+
+# Step 3: Calculate percentages
+summary["Event_Percentage"] = (summary["Event_Count"] / summary["Event_Count"].sum()) * 100
+summary["Net_Loss_Percentage"] = (summary["Net_Loss"] / summary["Net_Loss"].sum()) * 100
+
+# Normalize bubble sizes for visualization
+summary["Bubble_Size_Event"] = (summary["Event_Count"] / summary["Event_Count"].max()) * 1000
+summary["Bubble_Size_Loss"] = (summary["Net_Loss"] / summary["Net_Loss"].max()) * 1000
+
+# Step 4: Bubble plot for Event Counts
+plt.figure(figsize=(14, 8))
+scatter = plt.scatter(
+    summary["Business Line"], summary["Event_Count"],
+    s=summary["Bubble_Size_Event"], alpha=0.6, color="green", edgecolors="black", label="Event Count"
+)
+for i, txt in enumerate(summary["Event_Percentage"]):
+    plt.text(summary["Business Line"][i], summary["Event_Count"][i], f"{txt:.1f}%", ha="center", fontsize=10)
+
+plt.title("Event Counts Distribution (2021-2024)", fontsize=16)
+plt.xlabel("Business Line", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+plt.xticks(rotation=45, ha="right")
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.legend(loc="upper right", fontsize=12)
+plt.show()
+
+# Step 5: Bubble plot for Net Loss
+plt.figure(figsize=(14, 8))
+scatter = plt.scatter(
+    summary["Business Line"], summary["Net_Loss"],
+    s=summary["Bubble_Size_Loss"], alpha=0.6, color="blue", edgecolors="black", label="Net Loss"
+)
+for i, txt in enumerate(summary["Net_Loss_Percentage"]):
+    plt.text(summary["Business Line"][i], summary["Net_Loss"][i], f"{txt:.1f}%", ha="center", fontsize=10)
+
+plt.title("Net Loss Distribution (2021-2024)", fontsize=16)
+plt.xlabel("Business Line", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+plt.xticks(rotation=45, ha="right")
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.legend(loc="upper right", fontsize=12)
+plt.show()
+
+C:\Users\Himanshu Singh\AppData\Local\Programs\Python\Python312\Lib\site-packages\matplotlib\collections.py:996: RuntimeWarning: invalid value encountered in sqrt
+  scale = np.sqrt(self._sizes) * dpi / 72.0 * self._factor
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Net Loss Amount', 'sum'),
+    Event_Frequency=('Unique Event ID', 'count')
+).reset_index()
+
+# To avoid negative values in the donut chart, set Total_Loss to zero for negative values
+business_line_summary['Total_Loss'] = business_line_summary['Total_Loss'].apply(lambda x: max(x, 0))
+
+# Sort by Total Loss for better visualization
+business_line_summary = business_line_summary.sort_values(by='Total_Loss', ascending=False)
+
+# Manually define colors for each business line
+business_line_colors = {
+    'Retail': '#FF9999',
+    'Corporate Banking': '#66B3FF',
+    'Investment Banking': '#99FF99',
+    'Insurance': '#FFCC99',
+    'Wealth Management': '#FF9966',
+    'Asset Management': '#FF6600',
+    'Private Banking': '#CC99FF',
+    'Credit Card Services': '#FFCCFF',
+    'Mortgage Lending': '#66FF66',
+    'Financial Advisory': '#FF6666'
+}
+
+# Create the figure with two subplots
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the donut chart for Total Loss
+wedges1, texts1, autotexts1 = axs[0].pie(
+    business_line_summary['Total_Loss'],                # Data for Total Loss
+    labels=business_line_summary['Business Line'],      # Business Line names
+    autopct='%1.1f%%',                                  # Display percentage
+    startangle=90,                                      # Start angle for chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from dict
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},     # Donut shape (hole in the center)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'}  # Label text properties
+)
+
+# Add center circle to create the donut chart effect for Total Loss
+centre_circle1 = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+axs[0].add_artist(centre_circle1)
+
+# Title for the Total Loss chart
+axs[0].set_title("Donut Chart: Total Loss by Business Line", fontsize=16)
+
+# Plot the donut chart for Event Frequency
+wedges2, texts2, autotexts2 = axs[1].pie(
+    business_line_summary['Event_Frequency'],           # Data for Event Frequency
+    labels=business_line_summary['Business Line'],      # Business Line names
+    autopct='%1.1f%%',                                  # Display percentage
+    startangle=90,                                      # Start angle for chart
+    colors=[business_line_colors[b] for b in business_line_summary['Business Line']],  # Color from dict
+    wedgeprops={'width': 0.3, 'edgecolor': 'black'},     # Donut shape (hole in the center)
+    textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'}  # Label text properties
+)
+
+# Add center circle to create the donut chart effect for Event Frequency
+centre_circle2 = plt.Circle((0, 0), 0.70, color='white', fc='white', linewidth=0)
+axs[1].add_artist(centre_circle2)
+
+# Title for the Event Frequency chart
+axs[1].set_title("Donut Chart: Event Frequency by Business Line", fontsize=16)
+
+# Create the legend for the Total Loss chart outside the graph
+labels1 = [f"{label}: {loss:,.0f}" for label, loss in zip(business_line_summary['Business Line'], business_line_summary['Total_Loss'])]
+axs[0].legend(
+    labels1, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Total Loss Legend", 
+    frameon=False, title_fontsize=12
+)
+
+# Create the legend for the Event Frequency chart outside the graph
+labels2 = [f"{label}: {freq:,.0f}" for label, freq in zip(business_line_summary['Business Line'], business_line_summary['Event_Frequency'])]
+axs[1].legend(
+    labels2, loc='upper left', bbox_to_anchor=(1, 1), fontsize=10, title="Event Frequency Legend", 
+    frameon=False, title_fontsize=12
+)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Calculate the total loss and event frequency for each business line
+business_line_summary = df.groupby('Business Line').agg(
+    Total_Loss=('Net Loss Amount', 'sum'),
+    Event_Frequency=('Unique Event ID', 'count')
+).reset_index()
+
+# Normalize the bubble size for better visualization
+loss_bubble_size = business_line_summary['Total_Loss'] / max(business_line_summary['Total_Loss']) * 1000
+event_bubble_size = business_line_summary['Event_Frequency'] / max(business_line_summary['Event_Frequency']) * 1000
+
+# Define colors for business lines
+colors = plt.cm.tab10(np.linspace(0, 1, len(business_line_summary)))
+
+# Create the figure with two subplots
+fig, axs = plt.subplots(1, 2, figsize=(18, 8))
+
+# Plot the first bubble chart for Total Loss
+axs[0].scatter(
+    business_line_summary['Total_Loss'],                # X-axis: Total Loss
+    business_line_summary['Event_Frequency'],           # Y-axis: Event Frequency
+    s=loss_bubble_size,                                 # Bubble size: Total Loss (normalized)
+    alpha=0.6,                                          # Transparency for overlapping bubbles
+    c=colors,                                           # Bubble color
+    edgecolors='black',                                 # Bubble border color
+    linewidth=1.2
+)
+
+# Add labels for each bubble in Total Loss chart
+for i, row in business_line_summary.iterrows():
+    axs[0].text(
+        row['Total_Loss'], row['Event_Frequency'],       # Position of label
+        row['Business Line'],                           # Label text (business line)
+        fontsize=9, weight='bold', ha='center', va='center'
+    )
+
+# Titles and labels for Total Loss chart
+axs[0].set_title("Bubble Chart: Total Loss by Business Line", fontsize=16)
+axs[0].set_xlabel("Total Loss (in $)", fontsize=12)
+axs[0].set_ylabel("Event Frequency", fontsize=12)
+axs[0].grid(alpha=0.4, linestyle='--', linewidth=0.5)
+
+# Plot the second bubble chart for Event Frequency
+axs[1].scatter(
+    business_line_summary['Total_Loss'],                # X-axis: Total Loss
+    business_line_summary['Event_Frequency'],           # Y-axis: Event Frequency
+    s=event_bubble_size,                                # Bubble size: Event Frequency (normalized)
+    alpha=0.6,                                          # Transparency for overlapping bubbles
+    c=colors,                                           # Bubble color
+    edgecolors='black',                                 # Bubble border color
+    linewidth=1.2
+)
+
+# Add labels for each bubble in Event Frequency chart
+for i, row in business_line_summary.iterrows():
+    axs[1].text(
+        row['Total_Loss'], row['Event_Frequency'],       # Position of label
+        row['Business Line'],                           # Label text (business line)
+        fontsize=9, weight='bold', ha='center', va='center'
+    )
+
+# Titles and labels for Event Frequency chart
+axs[1].set_title("Bubble Chart: Event Frequency by Business Line", fontsize=16)
+axs[1].set_xlabel("Total Loss (in $)", fontsize=12)
+axs[1].set_ylabel("Event Frequency", fontsize=12)
+axs[1].grid(alpha=0.4, linestyle='--', linewidth=0.5)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Programs\Python\Python312\Lib\site-packages\matplotlib\collections.py:996: RuntimeWarning: invalid value encountered in sqrt
+  scale = np.sqrt(self._sizes) * dpi / 72.0 * self._factor
+
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+from scipy import stats
+import plotly.express as px
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Handle missing or zero values in the 'Net Loss Amount' and 'Event Frequency'
+df['Net Loss Amount'].fillna(0, inplace=True)  # Replace NaN with 0 for Net Loss
+df['Event Frequency'] = df.groupby(['Business Line', 'Event Type'])['Unique Event ID'].transform('count')  # Count events by type
+
+# Ensure no zero values for frequency in visualizations (if required)
+df['Event Frequency'] = np.where(df['Event Frequency'] == 0, 0.1, df['Event Frequency'])
+
+# Grouping by Business Line and Event Type
+business_line_summary = df.groupby(['Business Line', 'Event Type']).agg(
+    Total_Loss=('Net Loss Amount', 'sum'),
+    Event_Frequency=('Event Frequency', 'sum')
+).reset_index()
+
+# Melt the data for the sunburst chart
+sunburst_data = business_line_summary.melt(
+    id_vars=['Business Line', 'Event Type'], 
+    value_vars=['Total_Loss', 'Event_Frequency'], 
+    var_name='Metric', 
+    value_name='Value'
+)
+
+# Create the sunburst chart
+fig = px.sunburst(
+    sunburst_data,
+    path=['Business Line', 'Event Type', 'Metric'],  # Hierarchical structure
+    values='Value',
+    color='Value',
+    color_continuous_scale='RdYlGn',
+    title="Tree Visualization: Event Frequency and Total Loss by Business Line"
+)
+
+# Show the plot
+fig.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_11348\2217884987.py:54: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  df['Net Loss Amount'].fillna(0, inplace=True)  # Replace NaN with 0 for Net Loss
