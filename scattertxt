@@ -1,0 +1,837 @@
+## for scatter bar plot and line for business line
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Create the plot
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Bar plot for Event Count
+ax1.bar(
+    event_summary["Event Type"], event_summary["Event_Count"], 
+    color='#1f77b4', edgecolor='black', label="Event Count"  # Set color to a pleasant blue
+)
+
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14, color='#1f77b4')
+ax1.tick_params(axis='y', labelcolor='#1f77b4')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+
+# Line plot for Total Net Loss
+ax2.plot(
+    event_summary["Event Type"], event_summary["Total_Net_Loss"], 
+    color='#ff7f0e', marker="o", linewidth=2, label="Total Net Loss"  # Set color to a vibrant orange
+)
+
+ax2.set_ylabel("Total Net Loss", fontsize=14, color='#ff7f0e')
+ax2.tick_params(axis='y', labelcolor='#ff7f0e')
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Adjust the legend to be on the right side
+lines_labels = ax1.patches + ax2.lines
+labels = ['Event Count', 'Total Net Loss']
+plt.legend(lines_labels, labels, loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12, title="Metrics")
+
+plt.show()
+####
+same thig different color
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Dual-Axis Plot: Event Count and Total Net Loss (Event Type)
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Plot Event Count on the first y-axis
+sns.barplot(
+    data=event_summary,
+    x="Event Type",
+    y="Event_Count",
+    ax=ax1,
+    color='skyblue'
+)
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14, color='skyblue')
+ax1.tick_params(axis='y', labelcolor='skyblue')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+sns.lineplot(
+    data=event_summary,
+    x="Event Type",
+    y="Total_Net_Loss",
+    ax=ax2,
+    color='orange',
+    marker="o",
+    linewidth=2
+)
+ax2.set_ylabel("Total Net Loss", fontsize=14, color='orange')
+ax2.tick_params(axis='y', labelcolor='orange')
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Legend
+lines_labels = ax2.get_lines() + ax1.patches
+labels = ['Total Net Loss', 'Event Count']
+plt.legend(lines_labels, labels, loc='upper left', fontsize=10, title="Metrics")
+
+plt.show()
+
+
+
+#################################################333
+to add the value on each data points 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Create the plot
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Bar plot for Event Count
+bars = ax1.bar(
+    event_summary["Event Type"], event_summary["Event_Count"], 
+    color='#1f77b4', edgecolor='black', label="Event Count"  # Set color to a pleasant blue
+)
+
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14, color='#1f77b4')
+ax1.tick_params(axis='y', labelcolor='#1f77b4')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Annotate Event Count values
+for bar in bars:
+    yval = bar.get_height()
+    ax1.text(bar.get_x() + bar.get_width()/2, yval, round(yval, 2), ha='center', va='bottom', fontsize=10, color='black')
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+
+# Line plot for Total Net Loss
+line, = ax2.plot(
+    event_summary["Event Type"], event_summary["Total_Net_Loss"], 
+    color='#ff7f0e', marker="o", linewidth=2, label="Total Net Loss"  # Set color to a vibrant orange
+)
+
+ax2.set_ylabel("Total Net Loss", fontsize=14, color='#ff7f0e')
+ax2.tick_params(axis='y', labelcolor='#ff7f0e')
+
+# Annotate Total Net Loss values
+for i, txt in enumerate(event_summary["Total_Net_Loss"]):
+    ax2.text(event_summary["Event Type"][i], txt, round(txt, 2), ha='center', va='bottom', fontsize=10, color='black')
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Adjust the legend to be on the right side
+lines_labels = ax1.patches + [line]
+labels = ['Event Count', 'Total Net Loss']
+plt.legend(lines_labels, labels, loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12, title="Metrics")
+
+plt.show()
+##################################
+set threshold value on high
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Set a threshold for filtering
+threshold_event_count = 200  # Event Count threshold
+threshold_net_loss = 50000  # Total Net Loss threshold
+
+# Create the plot
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Bar plot for Event Count
+bars = ax1.bar(
+    event_summary["Event Type"], event_summary["Event_Count"], 
+    color='#1f77b4', edgecolor='black', label="Event Count"  # Set color to a pleasant blue
+)
+
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14, color='#1f77b4')
+ax1.tick_params(axis='y', labelcolor='#1f77b4')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Annotate Event Count values, only for those above threshold
+for bar in bars:
+    yval = bar.get_height()
+    if yval > threshold_event_count:  # Check if it exceeds threshold
+        ax1.text(bar.get_x() + bar.get_width()/2, yval, round(yval, 2), ha='center', va='bottom', fontsize=10, color='black')
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+
+# Line plot for Total Net Loss
+line, = ax2.plot(
+    event_summary["Event Type"], event_summary["Total_Net_Loss"], 
+    color='#ff7f0e', marker="o", linewidth=2, label="Total Net Loss"  # Set color to a vibrant orange
+)
+
+ax2.set_ylabel("Total Net Loss", fontsize=14, color='#ff7f0e')
+ax2.tick_params(axis='y', labelcolor='#ff7f0e')
+
+# Annotate Total Net Loss values, only for those above threshold
+for i, txt in enumerate(event_summary["Total_Net_Loss"]):
+    if txt > threshold_net_loss:  # Check if it exceeds threshold
+        ax2.text(event_summary["Event Type"][i], txt, round(txt, 2), ha='center', va='bottom', fontsize=10, color='black')
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Adjust the legend to be on the right side
+lines_labels = ax1.patches + [line]
+labels = ['Event Count', 'Total Net Loss']
+plt.legend(lines_labels, labels, loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12, title="Metrics")
+
+plt.show()
+##########################3
+
+
+Now scatter plots with grid
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Define the threshold
+threshold_event_count = 500  # Example threshold for Event Count
+threshold_net_loss = 10000  # Example threshold for Total Net Loss
+
+# Dual-Axis Plot: Event Count and Total Net Loss (Event Type) with Scatter Points
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Color palette for scatter plot (Event Count)
+sns.scatterplot(
+    data=event_summary,
+    x="Event Type",
+    y="Event_Count",
+    ax=ax1,
+    palette="Set2",  # More colorful palette (lighter tones)
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Adding a border to make points stand out
+    label='Event Count'
+)
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14)
+ax1.tick_params(axis='y')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+sns.scatterplot(
+    data=event_summary,
+    x="Event Type",
+    y="Total_Net_Loss",
+    ax=ax2,
+    color='darkorange',  # Dark orange color for better contrast
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Border to make the points visible
+    label='Total Net Loss'
+)
+ax2.set_ylabel("Total Net Loss", fontsize=14)
+ax2.tick_params(axis='y')
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type (Scatter Plot without Point Values)", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Set background color for a clean look
+plt.gcf().set_facecolor('#f4f4f4')  # Light background to contrast dark points
+
+# Add legends for both axes on the right side of the plot
+ax1.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 1), frameon=False, title_fontsize=12, labelspacing=1.5)
+ax2.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 0.85), frameon=False, title_fontsize=12, labelspacing=1.5)
+
+# Dotted grid lines
+ax1.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray')
+
+# Dotted box around the plot
+for spine in ax1.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+for spine in ax2.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+plt.show()
+############################################333
+scatter plots with value
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Define the threshold
+threshold_event_count = 500  # Example threshold for Event Count
+threshold_net_loss = 10000  # Example threshold for Total Net Loss
+
+# Dual-Axis Plot: Event Count and Total Net Loss (Event Type) with Scatter Points
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Color palette for scatter plot (Event Count)
+sns.scatterplot(
+    data=event_summary,
+    x="Event Type",
+    y="Event_Count",
+    ax=ax1,
+    palette="Set2",  # More colorful palette (lighter tones)
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Adding a border to make points stand out
+    label='Event Count'
+)
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14)
+ax1.tick_params(axis='y')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Add values on each point for Event Count (only if it exceeds threshold)
+for i, row in event_summary.iterrows():
+    if row["Event_Count"] > threshold_event_count:
+        ax1.text(
+            x=row["Event Type"], 
+            y=row["Event_Count"], 
+            s=str(int(row["Event_Count"])), 
+            color='black',  # Text color for visibility
+            ha='center', 
+            va='bottom', 
+            fontsize=10
+        )
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+sns.scatterplot(
+    data=event_summary,
+    x="Event Type",
+    y="Total_Net_Loss",
+    ax=ax2,
+    color='darkorange',  # Dark orange color for better contrast
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Border to make the points visible
+    label='Total Net Loss'
+)
+ax2.set_ylabel("Total Net Loss", fontsize=14)
+ax2.tick_params(axis='y')
+
+# Add values on each point for Total Net Loss (only if it exceeds threshold)
+for i, row in event_summary.iterrows():
+    if abs(row["Total_Net_Loss"]) > threshold_net_loss:
+        ax2.text(
+            x=row["Event Type"], 
+            y=row["Total_Net_Loss"], 
+            s=f"{int(row['Total_Net_Loss']):,}", 
+            color='black',  # Text color for visibility
+            ha='center', 
+            va='bottom', 
+            fontsize=10
+        )
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type (Scatter Plot with Threshold)", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Set background color for a clean look
+plt.gcf().set_facecolor('#f4f4f4')  # Light background to contrast dark points
+
+# Add legends for both axes on the right side of the plot
+ax1.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 1), frameon=False, title_fontsize=12, labelspacing=1.5)
+ax2.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 0.85), frameon=False, title_fontsize=12, labelspacing=1.5)
+
+# Dotted grid lines
+ax1.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray')
+
+# Dotted box around the plot
+for spine in ax1.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+for spine in ax2.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+plt.show()
+
+###############################################333
+scater plot with threshold value only
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Event Type and calculate total Net Loss and Event Count
+event_summary = df.groupby("Event Type").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Define the threshold
+threshold_event_count = 500  # Example threshold for Event Count
+threshold_net_loss = 10000  # Example threshold for Total Net Loss
+
+# Dual-Axis Plot: Event Count and Total Net Loss (Event Type) with Scatter Points
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Color palette for scatter plot (Event Count)
+sns.scatterplot(
+    data=event_summary,
+    x="Event Type",
+    y="Event_Count",
+    ax=ax1,
+    palette="Set2",  # More colorful palette (lighter tones)
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Adding a border to make points stand out
+    label='Event Count'
+)
+ax1.set_xlabel("Event Type", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14)
+ax1.tick_params(axis='y')
+ax1.set_xticklabels(event_summary["Event Type"], rotation=45, ha="right")
+
+# Add values on each point for Event Count (only if it exceeds threshold)
+for i, row in event_summary.iterrows():
+    if row["Event_Count"] > threshold_event_count:
+        ax1.text(
+            x=row["Event Type"], 
+            y=row["Event_Count"], 
+            s=str(int(row["Event_Count"])), 
+            color='black',  # Text color for visibility
+            ha='center', 
+            va='bottom', 
+            fontsize=10
+        )
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+sns.scatterplot(
+    data=event_summary,
+    x="Event Type",
+    y="Total_Net_Loss",
+    ax=ax2,
+    color='darkorange',  # Dark orange color for better contrast
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Border to make the points visible
+    label='Total Net Loss'
+)
+ax2.set_ylabel("Total Net Loss", fontsize=14)
+ax2.tick_params(axis='y')
+
+# Add values on each point for Total Net Loss (only if it exceeds threshold)
+for i, row in event_summary.iterrows():
+    if abs(row["Total_Net_Loss"]) > threshold_net_loss:
+        ax2.text(
+            x=row["Event Type"], 
+            y=row["Total_Net_Loss"], 
+            s=f"{int(row['Total_Net_Loss']):,}", 
+            color='black',  # Text color for visibility
+            ha='center', 
+            va='bottom', 
+            fontsize=10
+        )
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Event Type (Scatter Plot with Threshold)", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Set background color for a clean look
+plt.gcf().set_facecolor('#f4f4f4')  # Light background to contrast dark points
+
+# Add legends for both axes on the right side of the plot
+ax1.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 1), frameon=False, title_fontsize=12, labelspacing=1.5)
+ax2.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 0.85), frameon=False, title_fontsize=12, labelspacing=1.5)
+
+# Dotted grid lines
+ax1.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray')
+
+# Dotted box around the plot
+for spine in ax1.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+for spine in ax2.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+plt.show()
+##################################
+
+
+
