@@ -1,0 +1,90 @@
+Example of Combining Multiple Categories into One Category:
+If you want to create a new column that combines several event types (for example, "Fraud" and "Theft" into "Financial Risk"), or business lines (e.g., "Retail" and "Corporate Banking" into "Banking Services"), you can do this:
+
+Code:
+python
+Copy code
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Example of mapping multiple event types into a single category
+def map_event_type(event_type):
+    if event_type in ["Fraud", "Theft"]:
+        return "Financial Risk"
+    elif event_type in ["Cyber Attack", "System Failure"]:
+        return "Tech Failure"
+    elif event_type in ["Natural Disaster", "Vendor Risk"]:
+        return "External Risks"
+    elif event_type in ["Compliance", "Regulatory Violation"]:
+        return "Regulatory Issues"
+    else:
+        return "Operational Issues"
+
+# Apply the function to create a new column
+df['Combined Event Type'] = df['Event Type'].apply(map_event_type)
+
+# Print the first few rows to check the new column
+print(df.head())
+Breakdown:
+Mapping Function: The function map_event_type defines the mapping logic. It groups multiple event types into broader categories like "Financial Risk", "Tech Failure", etc.
+Apply Function: The apply(map_event_type) function applies the mapping to the Event Type column and creates a new column Combined Event Type.
+Result: You now have a column that combines multiple event types into one category.
+Output:
+For example:
+
+plaintext
+Copy code
+             Date Unique Event ID             Event Type      Business Line  ...  Combined Event Type
+0  2020-05-15    EID00001        Fraud          Retail         Financial Risk
+1  2020-07-22    EID00002   System Failure    Corporate Banking   Tech Failure
+2  2020-02-03    EID00003        Theft         Retail         Financial Risk
+3  2020-06-25    EID00004   Regulatory Violation   Financial Advisory  Regulatory Issues
+4  2020-04-14    EID00005     Vendor Risk     Insurance     External Risks
+You can adjust the mapping logic for your use case, combining other categories or conditions as needed.
