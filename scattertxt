@@ -1,3 +1,118 @@
+***with legened count6,56,50
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Step 1: Calculate event frequency
+event_frequency = df.groupby('Event Type').size()
+
+# Step 2: Filter for events where frequency is greater than 5, 10, 30, 100, 150
+thresholds = [5, 10, 30, 100, 150]
+filtered_events = {threshold: event_frequency[event_frequency >= threshold] for threshold in thresholds}
+
+# Step 3: Prepare pie charts and calculate net loss and event frequency by business line for each threshold
+fig, axs = plt.subplots(len(thresholds), 2, figsize=(18, 8 * len(thresholds)))
+
+for i, threshold in enumerate(thresholds):
+    # Filter the dataframe for the events that meet the frequency threshold
+    filtered_df = df[df['Event Type'].isin(filtered_events[threshold].index)]
+
+    # Calculate net loss by Business Line for this threshold
+    net_loss_by_line = filtered_df.groupby('Business Line')['Net Loss Amount'].sum()
+
+    # Calculate event frequency by Business Line for this threshold
+    event_freq_by_line = filtered_df.groupby('Business Line').size()
+
+    # Pie chart for total net loss distribution by Business Line (positive values only)
+    net_loss_by_line_positive = net_loss_by_line[net_loss_by_line > 0]  # Only include positive net losses
+    wedges1, texts1, autotexts1 = axs[i, 0].pie(
+        net_loss_by_line_positive, 
+        labels=None,  # Hide labels on the pie
+        autopct='%1.1f%%', 
+        startangle=90, 
+        colors=plt.cm.Paired.colors, 
+        textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'}
+    )
+    axs[i, 0].legend(
+        net_loss_by_line_positive.index, 
+        loc='center left', 
+        bbox_to_anchor=(1, 0.5), 
+        fontsize=10
+    )
+    axs[i, 0].set_title(f"Net Loss Distribution by Business Line (Count > {threshold})", fontsize=14)
+
+    # Pie chart for event frequency distribution by Business Line
+    wedges2, texts2, autotexts2 = axs[i, 1].pie(
+        event_freq_by_line, 
+        labels=None,  # Hide labels on the pie
+        autopct='%1.1f%%', 
+        startangle=90, 
+        colors=plt.cm.Paired.colors, 
+        textprops={'color': 'black', 'fontsize': 10, 'fontweight': 'bold'}
+    )
+    axs[i, 1].legend(
+        event_freq_by_line.index, 
+        loc='center left', 
+        bbox_to_anchor=(1, 0.5), 
+        fontsize=10
+    )
+    axs[i, 1].set_title(f"Event Frequency Distribution by Business Line (Count > {threshold})", fontsize=14)
+
+# Adjust layout to avoid overlap
+plt.tight_layout()
+plt.show()
+
+
+
+
+*****
 crete frequency gt5,10,15
 
 import pandas as pd
