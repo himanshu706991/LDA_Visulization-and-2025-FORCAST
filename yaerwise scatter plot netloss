@@ -1,0 +1,311 @@
+## at in one grapgh
+import matplotlib.pyplot as plt
+
+# Extract the year from the Date column
+df["Year"] = df["Date"].dt.year
+
+# Group by year to calculate the total loss and event count
+yearly_summary = df.groupby("Year").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Plotting
+fig, ax = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
+
+# Scatter plot for Total Net Loss
+ax[0].scatter(
+    yearly_summary["Year"],
+    yearly_summary["Total_Net_Loss"],
+    color="darkorange",
+    edgecolor="black",
+    s=100,
+    alpha=0.7
+)
+ax[0].axhline(0, color="blue", linestyle="--", linewidth=1)  # Reference line at zero
+ax[0].set_title("Total Net Loss Over Years", fontsize=16, fontweight="bold")
+ax[0].set_ylabel("Total Net Loss", fontsize=14)
+ax[0].grid(True, linestyle="--", alpha=0.5)
+
+# Scatter plot for Event Count
+ax[1].scatter(
+    yearly_summary["Year"],
+    yearly_summary["Event_Count"],
+    color="green",
+    edgecolor="black",
+    s=100,
+    alpha=0.7
+)
+ax[1].set_title("Event Count Over Years", fontsize=16, fontweight="bold")
+ax[1].set_xlabel("Year", fontsize=14)
+ax[1].set_ylabel("Event Count", fontsize=14)
+ax[1].grid(True, linestyle="--", alpha=0.5)
+
+# Adjust layout
+plt.tight_layout()
+
+# Show the plots
+plt.show()
+
+
+##########33
+import matplotlib.pyplot as plt
+
+# Extract the year from the Date column
+df["Year"] = df["Date"].dt.year
+
+# Group by year to calculate the total loss and event count
+yearly_summary = df.groupby("Year").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Plot 1: Total Net Loss Over Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    yearly_summary["Year"],
+    yearly_summary["Total_Net_Loss"],
+    color="darkorange",
+    edgecolor="black",
+    s=100,
+    alpha=0.7
+)
+plt.axhline(0, color="blue", linestyle="--", linewidth=1)  # Reference line at zero
+plt.title("Total Net Loss Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Total Net Loss", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+# Plot 2: Event Count Over Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    yearly_summary["Year"],
+    yearly_summary["Event_Count"],
+    color="green",
+    edgecolor="black",
+    s=100,
+    alpha=0.7
+)
+plt.title("Event Count Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+plt.show()
+#####
+with legened
+import matplotlib.pyplot as plt
+
+# Extract the year from the Date column
+df["Year"] = df["Date"].dt.year
+
+# Group by year to calculate the total loss and event count
+yearly_summary = df.groupby("Year").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Plot 1: Total Net Loss Over Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    yearly_summary["Year"],
+    yearly_summary["Total_Net_Loss"],
+    color="darkorange",
+    edgecolor="black",
+    s=100,
+    alpha=0.7,
+    label="Total Net Loss"
+)
+plt.axhline(0, color="blue", linestyle="--", linewidth=1, label="Zero Reference")  # Reference line at zero
+plt.title("Total Net Loss Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Total Net Loss", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.legend(loc="upper right", fontsize=12)  # Add legend
+plt.tight_layout()
+plt.show()
+
+# Plot 2: Event Count Over Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    yearly_summary["Year"],
+    yearly_summary["Event_Count"],
+    color="green",
+    edgecolor="black",
+    s=100,
+    alpha=0.7,
+    label="Event Count"
+)
+plt.title("Event Count Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.legend(loc="upper right", fontsize=12)  # Add legend
+plt.tight_layout()
+plt.show()
+#######33
+ with value
+import matplotlib.pyplot as plt
+
+# Extract the year from the Date column
+df["Year"] = df["Date"].dt.year
+
+# Group by year to calculate the total loss and event count
+yearly_summary = df.groupby("Year").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Plot 1: Total Net Loss Over Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    yearly_summary["Year"],
+    yearly_summary["Total_Net_Loss"],
+    color="darkorange",
+    edgecolor="black",
+    s=100,
+    alpha=0.7,
+    label="Total Net Loss"
+)
+plt.axhline(0, color="blue", linestyle="--", linewidth=1, label="Zero Reference")  # Reference line at zero
+
+# Annotate points with their values
+for i, row in yearly_summary.iterrows():
+    plt.text(
+        row["Year"],
+        row["Total_Net_Loss"],
+        f"{int(row['Total_Net_Loss']):,}",  # Format numbers with commas
+        fontsize=10,
+        ha="center",
+        va="bottom",
+        color="black"
+    )
+
+plt.title("Total Net Loss Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Total Net Loss", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.legend(loc="upper right", fontsize=12)  # Add legend
+plt.tight_layout()
+plt.show()
+
+# Plot 2: Event Count Over Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    yearly_summary["Year"],
+    yearly_summary["Event_Count"],
+    color="green",
+    edgecolor="black",
+    s=100,
+    alpha=0.7,
+    label="Event Count"
+)
+
+# Annotate points with their values
+for i, row in yearly_summary.iterrows():
+    plt.text(
+        row["Year"],
+        row["Event_Count"],
+        f"{int(row['Event_Count']):,}",  # Format numbers with commas
+        fontsize=10,
+        ha="center",
+        va="bottom",
+        color="black"
+    )
+
+plt.title("Event Count Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.legend(loc="upper right", fontsize=12)  # Add legend
+plt.tight_layout()
+plt.show()
+#####
+event netloss w r t year without aggregate
+import matplotlib.pyplot as plt
+
+# Extract the year from the Date column
+df["Year"] = df["Date"].dt.year
+
+# Scatter plot for Net Loss w.r.t. Years
+plt.figure(figsize=(12, 6))
+plt.scatter(
+    df["Year"],
+    df["Net Loss Amount"],
+    color="darkorange",
+    edgecolor="black",
+    alpha=0.7,
+    s=50,
+    label="Net Loss for Each Event"
+)
+
+# Annotate points with net loss values
+for i, row in df.iterrows():
+    if i % 200 == 0:  # To prevent overcrowding, annotate every 200th point
+        plt.text(
+            row["Year"],
+            row["Net Loss Amount"],
+            f"{int(row['Net Loss Amount']):,}",  # Format numbers with commas
+            fontsize=8,
+            ha="center",
+            va="bottom",
+            color="black"
+        )
+
+plt.axhline(0, color="blue", linestyle="--", linewidth=1, label="Zero Reference")  # Reference line at zero
+plt.title("Net Loss for Each Event Over Years", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.legend(loc="upper right", fontsize=12)
+plt.tight_layout()
+plt.show()
+####
+just netloss visual
+import matplotlib.pyplot as plt
+
+# Scatter plot for Net Loss w.r.t. Event IDs
+plt.figure(figsize=(16, 6))
+plt.scatter(
+    df["Unique Event ID"],
+    df["Net Loss Amount"],
+    color="purple",
+    edgecolor="black",
+    alpha=0.7,
+    s=50,
+    label="Net Loss for Each Event"
+)
+
+# Annotate points with net loss values (optional: only for a few points to avoid overcrowding)
+for i, row in df.iterrows():
+    if i % 200 == 0:  # Annotate every 200th point
+        plt.text(
+            row["Unique Event ID"],
+            row["Net Loss Amount"],
+            f"{int(row['Net Loss Amount']):,}",  # Format numbers with commas
+            fontsize=8,
+            ha="center",
+            va="bottom",
+            color="black"
+        )
+
+# Title and labels
+plt.title("Net Loss for Each Event", fontsize=16, fontweight="bold")
+plt.xlabel("Unique Event ID", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+
+# Adjust X-axis for better readability
+plt.xticks([])  # Hide X-axis labels for better clarity since IDs are too dense
+plt.axhline(0, color="blue", linestyle="--", linewidth=1, label="Zero Reference")  # Reference line at zero
+
+# Add legend
+plt.legend(loc="upper right", fontsize=12)
+
+# Grid for better visualization
+plt.grid(True, linestyle="--", alpha=0.5)
+
+# Display the plot
+plt.tight_layout()
+plt.show()
