@@ -1,4 +1,125 @@
+******
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime, timedelta
 
+# Function to generate random dates
+def random_dates(start, end, n=10):
+    return [start + timedelta(days=np.random.randint(0, (end - start).days)) for _ in range(n)]
+
+# Parameters
+num_records = 10000
+start_date = datetime.now() - timedelta(days=4*365)
+end_date = datetime.now()
+
+# Expanded categories
+business_lines = [
+    "Retail", "Corporate Banking", "Investment Banking", "Insurance",
+    "Wealth Management", "Asset Management", "Private Banking",
+    "Credit Card Services", "Mortgage Lending", "Financial Advisory"
+]
+
+event_types = [
+    "Fraud", "System Failure", "Theft", "Compliance", "Natural Disaster",
+    "Cyber Attack", "Market Risk", "Operational Error", "Vendor Risk", "Regulatory Violation"
+]
+
+# Generate data
+data = {
+    "Date": random_dates(start_date, end_date, num_records),
+    "Unique Event ID": [f"EID{str(i).zfill(5)}" for i in range(num_records)],
+    "Event Type": np.random.choice(event_types, num_records),
+    "Business Line": np.random.choice(business_lines, num_records),
+    "Event Description": np.random.choice(
+        [
+            "Unauthorized transaction", "Server downtime", "Lost assets", 
+            "Regulatory fines", "Data breach", "Network failure", 
+            "Inadequate compliance", "Financial misstatement", 
+            "Supplier issues", "Internal fraud"
+        ],
+        num_records
+    ),
+    "Net Loss Amount": np.random.choice(
+        [np.random.uniform(-10000, 0) for _ in range(num_records // 2)] + 
+        [np.random.uniform(0, 10000) for _ in range(num_records // 2)],
+        num_records
+    )
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Group by Business Line and calculate total Net Loss and Event Count
+business_line_summary = df.groupby("Business Line").agg(
+    Total_Net_Loss=("Net Loss Amount", "sum"),
+    Event_Count=("Unique Event ID", "count")
+).reset_index()
+
+# Define the threshold
+threshold_event_count = 500  # Example threshold for Event Count
+threshold_net_loss = 10000  # Example threshold for Total Net Loss
+
+# Dual-Axis Plot: Event Count and Total Net Loss (Business Line) with Scatter Points
+fig, ax1 = plt.subplots(figsize=(12, 8))
+
+# Color palette for scatter plot (Event Count)
+sns.scatterplot(
+    data=business_line_summary,
+    x="Business Line",
+    y="Event_Count",
+    ax=ax1,
+    palette="Set2",  # More colorful palette (lighter tones)
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Adding a border to make points stand out
+    label='Event Count'
+)
+ax1.set_xlabel("Business Line", fontsize=14)
+ax1.set_ylabel("Event Count", fontsize=14)
+ax1.tick_params(axis='y')
+ax1.set_xticklabels(business_line_summary["Business Line"], rotation=45, ha="right")
+
+# Create the second y-axis for Total Net Loss
+ax2 = ax1.twinx()
+sns.scatterplot(
+    data=business_line_summary,
+    x="Business Line",
+    y="Total_Net_Loss",
+    ax=ax2,
+    color='darkorange',  # Dark orange color for better contrast
+    s=150,  # Size of scatter points
+    edgecolor='black',  # Border to make the points visible
+    label='Total Net Loss'
+)
+ax2.set_ylabel("Total Net Loss", fontsize=14)
+ax2.tick_params(axis='y')
+
+# Title and layout adjustments
+plt.title("Event Count and Total Net Loss by Business Line (Scatter Plot without Point Values)", fontsize=16, fontweight="bold")
+plt.tight_layout()
+
+# Set background color for a clean look
+plt.gcf().set_facecolor('#f4f4f4')  # Light background to contrast dark points
+
+# Add legends for both axes on the right side of the plot
+ax1.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 1), frameon=False, title_fontsize=12, labelspacing=1.5)
+ax2.legend(loc='upper left', fontsize=10, title="Metrics", bbox_to_anchor=(1.05, 0.85), frameon=False, title_fontsize=12, labelspacing=1.5)
+
+# Dotted grid lines
+ax1.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray')
+
+# Dotted box around the plot
+for spine in ax1.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+for spine in ax2.spines.values():
+    spine.set_linestyle('--')  # Dotted line style
+    spine.set_linewidth(1.5)  # Line thickness
+
+plt.show()
+****
 single colum
 ChatGPT
 
