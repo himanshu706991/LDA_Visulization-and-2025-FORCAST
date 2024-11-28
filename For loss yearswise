@@ -1,3 +1,222 @@
+***
+value count and percenon loss by month and same for event count
+Here's an enhanced version of the bar graph that includes event count values and percentages on each bar as labels as well as a legend indicating what the bars and percentages represent.
+
+Combined Bar Graph Code with Enhanced Features
+python
+Copy code
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+# Extract year and month from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+df['Month'] = pd.to_datetime(df['Date']).dt.month
+
+# Filter for the last 4 years
+last_4_years = sorted(df['Year'].unique())[-4:]
+filtered_df = df[df['Year'].isin(last_4_years)]
+
+# Group by year and month and calculate event counts
+monthly_event_counts = filtered_df.groupby(['Year', 'Month'])['Unique Event ID'].count().reset_index()
+
+# Calculate percentage contributions
+total_counts_per_year = monthly_event_counts.groupby('Year')['Unique Event ID'].transform('sum')
+monthly_event_counts['Percentage'] = (monthly_event_counts['Unique Event ID'] / total_counts_per_year) * 100
+
+# Create month-year labels for x-axis
+monthly_event_counts['Month-Year'] = monthly_event_counts['Year'].astype(str) + '-' + monthly_event_counts['Month'].astype(str).zfill(2)
+
+# --- Plotting the Bar Chart ---
+fig, ax = plt.subplots(figsize=(16, 8))
+
+# Plot bars for event counts
+bars = ax.bar(
+    monthly_event_counts['Month-Year'], 
+    monthly_event_counts['Unique Event ID'], 
+    color='skyblue', 
+    edgecolor='black', 
+    alpha=0.8, 
+    label='Event Counts'
+)
+
+# Add absolute values and percentages on the bars
+for bar, count, percentage in zip(bars, monthly_event_counts['Unique Event ID'], monthly_event_counts['Percentage']):
+    height = bar.get_height()
+    ax.text(
+        bar.get_x() + bar.get_width() / 2, 
+        height + 2, 
+        f"{count} ({percentage:.1f}%)", 
+        ha='center', 
+        fontsize=9, 
+        rotation=90
+    )
+
+# Customizing x-axis labels (rotate for clarity)
+plt.xticks(
+    ticks=np.arange(len(monthly_event_counts['Month-Year'])), 
+    labels=monthly_event_counts['Month-Year'], 
+    rotation=45, 
+    fontsize=10
+)
+
+# Adding titles and labels
+ax.set_title("Monthly Event Counts and Percentage Contributions (Last 4 Years)", fontsize=16, fontweight='bold')
+ax.set_xlabel("Month-Year", fontsize=14)
+ax.set_ylabel("Event Counts", fontsize=14)
+
+# Adding gridlines
+ax.grid(axis='y', linestyle='--', alpha=0.6)
+
+# Add legend to indicate what the graph represents
+ax.legend(
+    title="Legend",
+    loc='upper right',
+    labels=["Event Counts (Bars)", "Percentage (Labels on Bars)"]
+)
+
+# Adjust layout for clarity
+plt.tight_layout()
+plt.show()
+Key Features:
+Bar Chart:
+
+Each bar represents the total event count for a specific month and year.
+Annotations on Bars:
+
+Each bar shows the event count value and its percentage contribution for the respective year in the format count (percentage%).
+Legend:
+
+Explains what the bars and annotations represent:
+Bars represent event counts.
+Labels represent the counts and their percentage contributions.
+X-axis Labels:
+
+Month-year combinations (e.g., 2021-01 for January 2021) are displayed and rotated for readability.
+Gridlines:
+
+Light gridlines on the y-axis improve visual clarity.
+This graph provides a clear and visually appealing way to show both event counts and their percentage contributions over the last four years, including all requested enhancements. Let me know if you'd like further refinements!
+
+
+
+
+
+
+You said:
+Similarly I need graph for net loss amount 
+ChatGPT said:
+ChatGPT
+Here's the code to create a monthly bar graph for net loss amounts (considering all amounts as positive), with the net loss value and its percentage contribution displayed on each bar, along with a legend to clarify what the graph represents.
+
+Combined Bar Graph Code for Net Loss Amounts
+python
+Copy code
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+# Ensure all Net Loss Amounts are positive
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()
+
+# Extract year and month from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+df['Month'] = pd.to_datetime(df['Date']).dt.month
+
+# Filter for the last 4 years
+last_4_years = sorted(df['Year'].unique())[-4:]
+filtered_df = df[df['Year'].isin(last_4_years)]
+
+# Group by year and month and calculate net loss amounts
+monthly_net_loss = filtered_df.groupby(['Year', 'Month'])['Net Loss Absolute'].sum().reset_index()
+
+# Calculate percentage contributions
+total_loss_per_year = monthly_net_loss.groupby('Year')['Net Loss Absolute'].transform('sum')
+monthly_net_loss['Percentage'] = (monthly_net_loss['Net Loss Absolute'] / total_loss_per_year) * 100
+
+# Create month-year labels for x-axis
+monthly_net_loss['Month-Year'] = monthly_net_loss['Year'].astype(str) + '-' + monthly_net_loss['Month'].astype(str).zfill(2)
+
+# --- Plotting the Bar Chart ---
+fig, ax = plt.subplots(figsize=(16, 8))
+
+# Plot bars for net loss amounts
+bars = ax.bar(
+    monthly_net_loss['Month-Year'], 
+    monthly_net_loss['Net Loss Absolute'], 
+    color='orange', 
+    edgecolor='black', 
+    alpha=0.8, 
+    label='Net Loss Amount (Absolute)'
+)
+
+# Add absolute values and percentages on the bars
+for bar, loss, percentage in zip(bars, monthly_net_loss['Net Loss Absolute'], monthly_net_loss['Percentage']):
+    height = bar.get_height()
+    ax.text(
+        bar.get_x() + bar.get_width() / 2, 
+        height + max(monthly_net_loss['Net Loss Absolute']) * 0.01,  # Adjust position slightly above bar
+        f"{loss:,.0f} ({percentage:.1f}%)", 
+        ha='center', 
+        fontsize=9, 
+        rotation=90
+    )
+
+# Customizing x-axis labels (rotate for clarity)
+plt.xticks(
+    ticks=np.arange(len(monthly_net_loss['Month-Year'])), 
+    labels=monthly_net_loss['Month-Year'], 
+    rotation=45, 
+    fontsize=10
+)
+
+# Adding titles and labels
+ax.set_title("Monthly Net Loss Amounts and Percentage Contributions (Last 4 Years)", fontsize=16, fontweight='bold')
+ax.set_xlabel("Month-Year", fontsize=14)
+ax.set_ylabel("Net Loss Amount (in Absolute USD)", fontsize=14)
+
+# Adding gridlines
+ax.grid(axis='y', linestyle='--', alpha=0.6)
+
+# Add legend to indicate what the graph represents
+ax.legend(
+    title="Legend",
+    loc='upper right',
+    labels=["Net Loss Amount (Bars)", "Percentage (Labels on Bars)"]
+)
+
+# Adjust layout for clarity
+plt.tight_layout()
+plt.show()
+Key Features:
+Bar Chart:
+
+Each bar represents the total net loss amount for a specific month and year.
+Annotations on Bars:
+
+Each bar shows the net loss value and its percentage contribution to the yearly total in the format value (percentage%).
+Legend:
+
+Explains that:
+Bars represent net loss amounts.
+Labels on the bars show the net loss value and its percentage contribution.
+X-axis Labels:
+
+Month-year combinations (e.g., 2021-01 for January 2021) are displayed and rotated for readability.
+Custom Y-axis:
+
+The y-axis scales dynamically to accommodate the net loss values.
+
+
+
+
+
+
+
+
+
+
+***
 
 *** months wise
 need month wise for the 4 years.
