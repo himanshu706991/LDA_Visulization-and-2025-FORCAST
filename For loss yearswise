@@ -1,3 +1,206 @@
+
+*** months wise
+need month wise for the 4 years.
+ChatGPT said:
+ChatGPT
+Here’s how you can create a month-wise bar graph for the last 4 years, displaying the total net loss (absolute values) for each month. The graph will also show the loss value and its percentage contribution to the total on the bars.
+
+Code Implementation
+python
+Copy code
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming `df` contains your data and `Net Loss Amount` and `Date` are relevant columns
+# Convert all Net Loss Amounts to absolute values
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()
+
+# Extract year and month from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+df['Month'] = pd.to_datetime(df['Date']).dt.month
+
+# Filter for the last 4 years
+last_4_years = sorted(df['Year'].unique())[-4]
+filtered_df = df[df['Year'] >= last_4_years]
+
+# Group by year and month and calculate total Net Loss
+monthly_loss = filtered_df.groupby(['Year', 'Month'])['Net Loss Absolute'].sum().reset_index()
+
+# Create a pivot table for visualization (Years as columns, Months as rows)
+monthly_pivot = monthly_loss.pivot(index='Month', columns='Year', values='Net Loss Absolute')
+
+# Calculate percentage contribution of each month for each year
+monthly_percentage = monthly_pivot.divide(monthly_pivot.sum(axis=0), axis=1) * 100
+
+# --- Plotting the Bar Chart ---
+fig, axes = plt.subplots(2, 1, figsize=(14, 12), sharex=True)
+
+# Bar Chart: Net Loss Values
+monthly_pivot.plot(kind='bar', ax=axes[0], edgecolor='black', colormap='viridis')
+axes[0].set_title("Month-wise Net Loss for Last 4 Years (Absolute Values)", fontsize=16, fontweight="bold")
+axes[0].set_ylabel("Net Loss (Absolute, in USD)", fontsize=14)
+axes[0].legend(title="Year", fontsize=10)
+axes[0].grid(axis="y", linestyle="--", alpha=0.7)
+
+# Annotate bars with absolute values
+for year, bars in zip(monthly_pivot.columns, axes[0].patches):
+    axes[0].text(bars.get_x() + bars.get_width() / 2, bars.get_height() + 0.02 * monthly_pivot.values.max(),
+                 f"{bars.get_height():,.0f}", ha='center', fontsize=9, rotation=90)
+
+# Bar Chart: Percentages
+monthly_percentage.plot(kind='bar', ax=axes[1], edgecolor='black', colormap='plasma')
+axes[1].set_title("Month-wise Net Loss for Last 4 Years (Percentages)", fontsize=16, fontweight="bold")
+axes[1].set_ylabel("Percentage Contribution (%)", fontsize=14)
+axes[1].legend(title="Year", fontsize=10)
+axes[1].grid(axis="y", linestyle="--", alpha=0.7)
+
+# Annotate bars with percentages
+for year, bars in zip(monthly_percentage.columns, axes[1].patches):
+    axes[1].text(bars.get_x() + bars.get_width() / 2, bars.get_height() + 0.02 * 100,
+                 f"{bars.get_height():.1f}%", ha='center', fontsize=9, rotation=90)
+
+# Final adjustments
+plt.xticks(ticks=range(12), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], fontsize=12)
+plt.xlabel("Month", fontsize=14)
+plt.tight_layout()
+plt.show()
+Explanation
+Data Preparation:
+
+The Net Loss Amount is converted to absolute values.
+Filtered for the last 4 years using the Year column.
+Grouped by Year and Month to calculate total Net Loss.
+Pivot Table:
+
+Created a pivot table with Month as rows and Year as columns to facilitate plotting.
+Visualization:
+
+Two separate bar charts are plotted:
+Net Loss Values: Displays absolute values for each year and month.
+Percentages: Shows each month’s contribution to the yearly total as percentages.
+Annotations:
+
+Absolute values and percentages are displayed on top of their respective bars.
+Color Maps:
+
+Different colormaps (viridis and plasma) are used to differentiate charts.
+Let me know if you'd like further customization or clarification!
+
+
+2/2
+
+
+
+
+
+
+You said:
+Do the smae for event counts
+ChatGPT said:
+ChatGPT
+Here’s how you can modify the same logic to create month-wise bar graphs for event counts over the last 4 years, with the same approach to include values and percentage contributions on the charts.
+
+Code for Event Counts
+python
+Copy code
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming `df` contains your data and 'Unique Event ID' is relevant for event counts
+# Extract year and month from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+df['Month'] = pd.to_datetime(df['Date']).dt.month
+
+# Filter for the last 4 years
+last_4_years = sorted(df['Year'].unique())[-4]
+filtered_df = df[df['Year'] >= last_4_years]
+
+# Group by year and month and calculate event counts
+monthly_event_counts = filtered_df.groupby(['Year', 'Month'])['Unique Event ID'].count().reset_index()
+
+# Create a pivot table for visualization (Years as columns, Months as rows)
+event_count_pivot = monthly_event_counts.pivot(index='Month', columns='Year', values='Unique Event ID')
+
+# Calculate percentage contribution of each month for each year
+event_count_percentage = event_count_pivot.divide(event_count_pivot.sum(axis=0), axis=1) * 100
+
+# --- Plotting the Bar Chart ---
+fig, axes = plt.subplots(2, 1, figsize=(14, 12), sharex=True)
+
+# Bar Chart: Event Counts
+event_count_pivot.plot(kind='bar', ax=axes[0], edgecolor='black', colormap='viridis')
+axes[0].set_title("Month-wise Event Counts for Last 4 Years (Absolute Values)", fontsize=16, fontweight="bold")
+axes[0].set_ylabel("Event Counts", fontsize=14)
+axes[0].legend(title="Year", fontsize=10)
+axes[0].grid(axis="y", linestyle="--", alpha=0.7)
+
+# Annotate bars with absolute values
+for bars in axes[0].patches:
+    height = bars.get_height()
+    if height > 0:  # Annotate only for positive values
+        axes[0].text(bars.get_x() + bars.get_width() / 2, height + 0.02 * event_count_pivot.values.max(),
+                     f"{height:.0f}", ha='center', fontsize=9, rotation=90)
+
+# Bar Chart: Percentages
+event_count_percentage.plot(kind='bar', ax=axes[1], edgecolor='black', colormap='plasma')
+axes[1].set_title("Month-wise Event Counts for Last 4 Years (Percentages)", fontsize=16, fontweight="bold")
+axes[1].set_ylabel("Percentage Contribution (%)", fontsize=14)
+axes[1].legend(title="Year", fontsize=10)
+axes[1].grid(axis="y", linestyle="--", alpha=0.7)
+
+# Annotate bars with percentages
+for bars in axes[1].patches:
+    height = bars.get_height()
+    if height > 0:  # Annotate only for positive percentages
+        axes[1].text(bars.get_x() + bars.get_width() / 2, height + 0.02 * 100,
+                     f"{height:.1f}%", ha='center', fontsize=9, rotation=90)
+
+# Final adjustments
+plt.xticks(ticks=range(12), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], fontsize=12)
+plt.xlabel("Month", fontsize=14)
+plt.tight_layout()
+plt.show()
+Explanation
+Data Preparation:
+
+Grouped the data by Year and Month to count the number of unique events in each month.
+Used .count() on the Unique Event ID column to get event counts.
+Pivot Table:
+
+Created a pivot table where Month is the index and Year forms the columns, showing event counts for each year.
+Calculations:
+
+Calculated the percentage contribution of each month to the yearly event count totals.
+Visualization:
+
+Two bar charts:
+Event Counts: Shows the absolute number of events per month.
+Percentages: Displays the monthly percentage contributions.
+Annotations:
+
+Absolute event counts are displayed on the first chart.
+Percentage values are displayed on the second chart.
+Legends and Axis Labels:
+
+Used custom legends and titles for clarity.
+Let me know if you need additional adjustments or enhancements!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****
 I need bar graph fro year wise net loss with loss value and percentage on bar graph with proper legened 
 ChatGPT said:
 ChatGPT
