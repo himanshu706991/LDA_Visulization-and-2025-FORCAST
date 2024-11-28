@@ -1,0 +1,1336 @@
+#percentage and value counts on grapgh
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate value counts and percentages for Business Line
+business_line_counts = df["Business Line"].value_counts()
+business_line_percentages = (business_line_counts / len(df)) * 100
+
+# Create a DataFrame for easier manipulation
+business_line_summary = pd.DataFrame({
+    "Count": business_line_counts,
+    "Percentage": business_line_percentages
+}).reset_index().rename(columns={"index": "Business Line"})
+
+# Plot the data
+plt.figure(figsize=(12, 8))
+bars = plt.bar(
+    business_line_summary["Business Line"],
+    business_line_summary["Count"],
+    color="skyblue",
+    edgecolor="black",
+    alpha=0.8
+)
+
+# Annotate each bar with the count and percentage
+for bar, count, percentage in zip(bars, business_line_summary["Count"], business_line_summary["Percentage"]):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{count}\n({percentage:.1f}%)",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels
+plt.title("Value Counts and Percentages by Business Line", fontsize=16, fontweight="bold")
+plt.xlabel("Business Line", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+
+# Rotate X-axis labels for better readability
+plt.xticks(rotation=45, ha="right")
+
+# Add gridlines
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Display the plot
+plt.tight_layout()
+plt.show()
+
+#########333
+only peecentage only count seprate grapgh
+import matplotlib.pyplot as plt
+
+# Prepare data
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()  # Use absolute values for Net Loss
+grouped_data = df.groupby('Business Line').agg({
+    'Net Loss Absolute': 'sum',  # Sum of absolute Net Loss
+    'Unique Event ID': 'count'   # Count of events
+}).rename(columns={'Unique Event ID': 'Event Count'})
+
+# Calculate percentages
+net_loss_percentage = grouped_data['Net Loss Absolute'] / grouped_data['Net Loss Absolute'].sum() * 100
+
+# Custom colors for each Business Line
+custom_colors = {
+    "Retail": "#ff9999",          # Light Red
+    "Corporate Banking": "#66b3ff",  # Light Blue
+    "Investment Banking": "#99ff99", # Light Green
+    "Insurance": "#ffcc99",        # Light Orange
+    "Wealth Management": "#ffb3e6", # Light Pink
+    "Asset Management": "#c2c2f0",  # Lavender
+    "Private Banking": "#ffb366",   # Light Yellow
+    "Credit Card Services": "#b3b3cc", # Light Grey
+    "Mortgage Lending": "#c4e17f",  # Light Greenish Yellow
+    "Financial Advisory": "#b38b6d"  # Brownish
+}
+
+# Bar graph for Net Loss (Absolute)
+fig, ax = plt.subplots(figsize=(10, 6))
+bars = ax.bar(grouped_data.index, grouped_data['Net Loss Absolute'], color=[custom_colors[bl] for bl in grouped_data.index])
+
+# Add percentage values on top of each bar
+for i, bar in enumerate(bars):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width() / 2, height + 1000, f'{height:,.0f} ({net_loss_percentage[i]:.1f}%)', 
+            ha='center', va='bottom', fontsize=10)
+
+# Title and labels
+ax.set_title("Net Loss (Absolute) Distribution by Business Line", fontsize=14)
+ax.set_xlabel("Business Line", fontsize=12)
+ax.set_ylabel("Net Loss (Absolute)", fontsize=12)
+
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+
+# Bar graph for Net Loss Percentage
+fig, ax = plt.subplots(figsize=(10, 6))
+bars = ax.bar(grouped_data.index, net_loss_percentage, color=[custom_colors[bl] for bl in grouped_data.index])
+
+# Add percentage values on top of each bar
+for i, bar in enumerate(bars):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width() / 2, height + 1, f'{height:.1f}%', 
+            ha='center', va='bottom', fontsize=10)
+
+# Title and labels
+ax.set_title("Net Loss Percentage Distribution by Business Line", fontsize=14)
+ax.set_xlabel("Business Line", fontsize=12)
+ax.set_ylabel("Percentage of Net Loss", fontsize=12)
+
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+$$$$$$$$4$$$$$
+
+only value
+import matplotlib.pyplot as plt
+
+# Prepare data
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()  # Use absolute values for Net Loss
+grouped_data = df.groupby('Business Line').agg({
+    'Net Loss Absolute': 'sum',  # Sum of absolute Net Loss
+    'Unique Event ID': 'count'   # Count of events
+}).rename(columns={'Unique Event ID': 'Event Count'})
+
+# Calculate percentages
+net_loss_percentage = grouped_data['Net Loss Absolute'] / grouped_data['Net Loss Absolute'].sum() * 100
+
+# Custom colors for each Business Line
+custom_colors = {
+    "Retail": "#ff9999",          # Light Red
+    "Corporate Banking": "#66b3ff",  # Light Blue
+    "Investment Banking": "#99ff99", # Light Green
+    "Insurance": "#ffcc99",        # Light Orange
+    "Wealth Management": "#ffb3e6", # Light Pink
+    "Asset Management": "#c2c2f0",  # Lavender
+    "Private Banking": "#ffb366",   # Light Yellow
+    "Credit Card Services": "#b3b3cc", # Light Grey
+    "Mortgage Lending": "#c4e17f",  # Light Greenish Yellow
+    "Financial Advisory": "#b38b6d"  # Brownish
+}
+
+# Bar graph for Net Loss (Absolute)
+fig, ax = plt.subplots(figsize=(10, 6))
+bars = ax.bar(grouped_data.index, grouped_data['Net Loss Absolute'], color=[custom_colors[bl] for bl in grouped_data.index])
+
+# Add percentage values on top of each bar for Net Loss (Absolute)
+for i, bar in enumerate(bars):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width() / 2, height + 1000, f'{height:,.0f}', 
+            ha='center', va='bottom', fontsize=10)
+
+# Title and labels for Net Loss Absolute
+ax.set_title("Net Loss (Absolute) Distribution by Business Line", fontsize=14)
+ax.set_xlabel("Business Line", fontsize=12)
+ax.set_ylabel("Net Loss (Absolute)", fontsize=12)
+
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+
+# Bar graph for Net Loss Percentage
+fig, ax = plt.subplots(figsize=(10, 6))
+bars = ax.bar(grouped_data.index, net_loss_percentage, color=[custom_colors[bl] for bl in grouped_data.index])
+
+# Add percentage values on top of each bar for Net Loss Percentage
+for i, bar in enumerate(bars):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width() / 2, height + 1, f'{height:.1f}%', 
+            ha='center', va='bottom', fontsize=10)
+
+# Title and labels for Net Loss Percentage
+ax.set_title("Net Loss Percentage Distribution by Business Line", fontsize=14)
+ax.set_xlabel("Business Line", fontsize=12)
+ax.set_ylabel("Percentage of Net Loss", fontsize=12)
+
+# Set y-axis limit for percentage graph to be between 0% and 100%
+ax.set_ylim(0, 100)
+
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+
+##########333
+only Value counts 
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Calculate value counts for Business Line
+business_line_counts = df["Business Line"].value_counts()
+
+# Create a DataFrame for easier manipulation
+business_line_summary = pd.DataFrame({
+    "Business Line": business_line_counts.index,
+    "Count": business_line_counts.values
+})
+
+# Plot the data
+plt.figure(figsize=(12, 8))
+bars = plt.bar(
+    business_line_summary["Business Line"],
+    business_line_summary["Count"],
+    color="skyblue",
+    edgecolor="black",
+    alpha=0.8
+)
+
+# Annotate each bar with the count
+for bar, count in zip(bars, business_line_summary["Count"]):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{count}",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels
+plt.title("Value Counts by Business Line", fontsize=16, fontweight="bold")
+plt.xlabel("Business Line", fontsize=14)
+plt.ylabel("Event Count", fontsize=14)
+
+# Rotate X-axis labels for better readability
+plt.xticks(rotation=45, ha="right")
+
+# Add gridlines
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Display the plot
+plt.tight_layout()
+plt.show()
+$$$$$$$$$$444
+year wise value and percentage
+#yearwise netloss 
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Extract the year from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+
+# Calculate yearly total net loss and percentage
+yearly_loss = df.groupby('Year')['Net Loss Amount'].sum().reset_index()
+total_loss = yearly_loss['Net Loss Amount'].sum()
+yearly_loss['Percentage'] = (yearly_loss['Net Loss Amount'] / total_loss) * 100
+
+# Plot the data
+plt.figure(figsize=(12, 8))
+bars = plt.bar(
+    yearly_loss['Year'],
+    yearly_loss['Net Loss Amount'],
+    color='steelblue',
+    edgecolor='black',
+    alpha=0.8
+)
+
+# Annotate the bars with values and percentages
+for bar, loss, pct in zip(bars, yearly_loss['Net Loss Amount'], yearly_loss['Percentage']):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{loss:,.0f}\n({pct:.1f}%)",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels
+plt.title("Year-wise Net Loss (Values and Percentages)", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+
+# Add gridlines
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Display the plot
+plt.tight_layout()
+plt.show()
+
+$$$$
+hand;e negative loss
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Filter out negative Net Loss Amount
+positive_df = df[df['Net Loss Amount'] > 0]
+
+# Extract the year from the Date column
+positive_df['Year'] = pd.to_datetime(positive_df['Date']).dt.year
+
+# Calculate yearly total net loss and percentage
+yearly_loss = positive_df.groupby('Year')['Net Loss Amount'].sum().reset_index()
+total_loss = yearly_loss['Net Loss Amount'].sum()
+yearly_loss['Percentage'] = (yearly_loss['Net Loss Amount'] / total_loss) * 100
+
+# Plot the data
+plt.figure(figsize=(12, 8))
+bars = plt.bar(
+    yearly_loss['Year'],
+    yearly_loss['Net Loss Amount'],
+    color='skyblue',
+    edgecolor='black',
+    alpha=0.8
+)
+
+# Annotate the bars with values and percentages
+for bar, loss, pct in zip(bars, yearly_loss['Net Loss Amount'], yearly_loss['Percentage']):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{loss:,.0f}\n({pct:.1f}%)",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels
+plt.title("Year-wise Net Loss (Values and Percentages, Positive Only)", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+
+# Add gridlines
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Display the plot
+plt.tight_layout()
+plt.show()
+####
+percentage and valuecounts by year
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Filter out negative Net Loss Amount
+positive_df = df[df['Net Loss Amount'] > 0]
+
+# Extract the year from the Date column
+positive_df['Year'] = pd.to_datetime(positive_df['Date']).dt.year
+
+# Calculate yearly total net loss and percentage
+yearly_loss = positive_df.groupby('Year')['Net Loss Amount'].sum().reset_index()
+total_loss = yearly_loss['Net Loss Amount'].sum()
+yearly_loss['Percentage'] = (yearly_loss['Net Loss Amount'] / total_loss) * 100
+
+# Plot 1: Year-wise Net Loss Values
+plt.figure(figsize=(12, 6))
+bars = plt.bar(
+    yearly_loss['Year'],
+    yearly_loss['Net Loss Amount'],
+    color='steelblue',
+    edgecolor='black',
+    alpha=0.8
+)
+
+# Annotate the bars with net loss values
+for bar, loss in zip(bars, yearly_loss['Net Loss Amount']):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{loss:,.0f}",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels for Net Loss plot
+plt.title("Year-wise Net Loss (Values)", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+# Plot 2: Year-wise Net Loss Percentages
+plt.figure(figsize=(12, 6))
+bars = plt.bar(
+    yearly_loss['Year'],
+    yearly_loss['Percentage'],
+    color='darkorange',
+    edgecolor='black',
+    alpha=0.8
+)
+
+# Annotate the bars with percentages
+for bar, pct in zip(bars, yearly_loss['Percentage']):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{pct:.1f}%",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels for Percentage plot
+plt.title("Year-wise Net Loss (Percentages)", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Percentage (%)", fontsize=14)
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+plt.tight_layout()
+plt.show()
+############3
+Buble chart sorted net loss by index
+#simple bubbule grapgh by net loss
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Filter out negative Net Loss Amount
+positive_df = df[df['Net Loss Amount'] > 0]
+
+# Extract the year from the Date column
+positive_df['Year'] = pd.to_datetime(positive_df['Date']).dt.year
+
+# Sort the net loss values in descending order
+sorted_df = positive_df.sort_values(by='Net Loss Amount', ascending=False).reset_index(drop=True)
+
+# Add an index column for plotting
+sorted_df['Index'] = sorted_df.index + 1
+
+# --- Simple Bubble Chart for Net Loss Values ---
+plt.figure(figsize=(14, 8))
+bubble_sizes = sorted_df['Net Loss Amount'] / 500  # Scale bubble sizes for better visualization
+
+sns.scatterplot(
+    x=sorted_df['Index'],
+    y=sorted_df['Net Loss Amount'],
+    size=bubble_sizes,
+    sizes=(50, 500),  # Range for bubble sizes
+    color="blue",
+    edgecolor="black",
+    alpha=0.7,  # Slight transparency
+    legend=False
+)
+
+# Add title and labels
+plt.title("Net Loss Values (Simple Bubble Chart)", fontsize=18, fontweight="bold", color="darkblue")
+plt.xlabel("Index (Sorted by Net Loss)", fontsize=14)
+plt.ylabel("Net Loss Amount (in USD)", fontsize=14)
+plt.grid(axis="y", linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+#########33
+remive >20m
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Example: Assuming df is your dataframe
+# Filter out negative Net Loss Amount
+positive_df = df[df['Net Loss Amount'] > 0]
+
+# Extract the year from the Date column
+positive_df['Year'] = pd.to_datetime(positive_df['Date']).dt.year
+
+# Set a threshold for identifying outliers (e.g., 95th percentile of the Net Loss Amount)
+#threshold = positive_df['Net Loss Amount'].quantile(0.95)
+threshold=6000
+# Identify outliers and count them
+outliers_df = positive_df[positive_df['Net Loss Amount'] > threshold]
+outlier_count = outliers_df.shape[0]
+
+# Remove outliers from the data
+filtered_df = positive_df[positive_df['Net Loss Amount'] <= threshold]
+
+# Sort the remaining data by Net Loss Amount
+sorted_df = filtered_df.sort_values(by='Net Loss Amount', ascending=False).reset_index(drop=True)
+
+# Add an index column for plotting
+sorted_df['Index'] = sorted_df.index + 1
+
+# --- Simple Bubble Chart for Net Loss Values (After Removing Outliers) ---
+plt.figure(figsize=(14, 8))
+bubble_sizes = sorted_df['Net Loss Amount'] / 500  # Scale bubble sizes for better visualization
+
+sns.scatterplot(
+    x=sorted_df['Index'],
+    y=sorted_df['Net Loss Amount'],
+    size=bubble_sizes,
+    sizes=(50, 500),  # Range for bubble sizes
+    color="blue",
+    edgecolor="black",
+    alpha=0.7,  # Slight transparency
+    legend=False
+)
+
+# Add title and labels
+plt.title("Net Loss Values (Bubble Chart After Removing Outliers)", fontsize=18, fontweight="bold", color="darkblue")
+plt.xlabel("Index (Sorted by Net Loss)", fontsize=14)
+plt.ylabel("Net Loss Amount (in USD)", fontsize=14)
+plt.grid(axis="y", linestyle="--", alpha=0.6)
+plt.tight_layout()
+
+# Show outlier count
+print(f"Number of events with outlier net loss (> {threshold}): {outlier_count}")
+
+plt.show()
+########33
+pie chart reqre request
+#manually coloy legend with percentage
+import matplotlib.pyplot as plt
+
+# Prepare data
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()  # Use absolute values for Net Loss
+grouped_data = df.groupby('Business Line').agg({
+    'Net Loss Absolute': 'sum',  # Sum of absolute Net Loss
+    'Unique Event ID': 'count'   # Count of events
+}).rename(columns={'Unique Event ID': 'Event Count'})
+
+# Calculate percentages
+net_loss_percentage = grouped_data['Net Loss Absolute'] / grouped_data['Net Loss Absolute'].sum() * 100
+event_count_percentage = grouped_data['Event Count'] / grouped_data['Event Count'].sum() * 100
+
+# Define a custom color palette using a dictionary (for both pie charts)
+custom_colors = {
+    "Retail": "#ff9999",          # Light Red
+    "Corporate Banking": "#66b3ff",  # Light Blue
+    "Investment Banking": "#99ff99", # Light Green
+    "Insurance": "#ffcc99",        # Light Orange
+    "Wealth Management": "#ffb3e6", # Light Pink
+    "Asset Management": "#c2c2f0",  # Lavender
+    "Private Banking": "#ffb366",   # Light Yellow
+    "Credit Card Services": "#b3b3cc", # Light Grey
+    "Mortgage Lending": "#c4e17f",  # Light Greenish Yellow
+    "Financial Advisory": "#b38b6d"  # Brownish
+}
+
+# Plot for Net Loss (Absolute) and Event Count Distribution
+fig, ax = plt.subplots(1, 2, figsize=(14, 7))
+
+# Pie chart for Net Loss Amount (Absolute)
+wedges1, texts1, autotexts1 = ax[0].pie(
+    grouped_data['Net Loss Absolute'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index]  # Use custom colors
+)
+# Create legend with percentage values
+legend_labels1 = [f"{business_line}: {net_loss_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax[0].set_title("Net Loss (Absolute) Distribution by Business Line")
+ax[0].legend(wedges1, legend_labels1, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+# Pie chart for Event Count
+wedges2, texts2, autotexts2 = ax[1].pie(
+    grouped_data['Event Count'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index]  # Use custom colors
+)
+# Create legend with percentage values
+legend_labels2 = [f"{business_line}: {event_count_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax[1].set_title("Event Count Distribution by Business Line")
+ax[1].legend(wedges2, legend_labels2, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+######33
+danut chart
+import matplotlib.pyplot as plt
+
+# Prepare data
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()  # Use absolute values for Net Loss
+grouped_data = df.groupby('Business Line').agg({
+    'Net Loss Absolute': 'sum',  # Sum of absolute Net Loss
+    'Unique Event ID': 'count'   # Count of events
+}).rename(columns={'Unique Event ID': 'Event Count'})
+
+# Calculate percentages
+net_loss_percentage = grouped_data['Net Loss Absolute'] / grouped_data['Net Loss Absolute'].sum() * 100
+event_count_percentage = grouped_data['Event Count'] / grouped_data['Event Count'].sum() * 100
+
+# Define a custom color palette using a dictionary (for both donut charts)
+custom_colors = {
+    "Retail": "#ff9999",          # Light Red
+    "Corporate Banking": "#66b3ff",  # Light Blue
+    "Investment Banking": "#99ff99", # Light Green
+    "Insurance": "#ffcc99",        # Light Orange
+    "Wealth Management": "#ffb3e6", # Light Pink
+    "Asset Management": "#c2c2f0",  # Lavender
+    "Private Banking": "#ffb366",   # Light Yellow
+    "Credit Card Services": "#b3b3cc", # Light Grey
+    "Mortgage Lending": "#c4e17f",  # Light Greenish Yellow
+    "Financial Advisory": "#b38b6d"  # Brownish
+}
+
+# Plot for Net Loss (Absolute) and Event Count Distribution
+fig, ax = plt.subplots(1, 2, figsize=(14, 7))
+
+# Donut chart for Net Loss Amount (Absolute)
+wedges1, texts1, autotexts1 = ax[0].pie(
+    grouped_data['Net Loss Absolute'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index],  # Use custom colors
+    wedgeprops={'width': 0.3}  # To make the pie chart into a donut chart
+)
+
+# Create legend with percentage values for Net Loss (Absolute)
+legend_labels1 = [f"{business_line}: {net_loss_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax[0].set_title("Net Loss (Absolute) Distribution by Business Line")
+ax[0].legend(wedges1, legend_labels1, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+# Donut chart for Event Count Distribution
+wedges2, texts2, autotexts2 = ax[1].pie(
+    grouped_data['Event Count'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index],  # Use custom colors
+    wedgeprops={'width': 0.3}  # To make the pie chart into a donut chart
+)
+
+# Create legend with percentage values for Event Count
+legend_labels2 = [f"{business_line}: {event_count_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax[1].set_title("Event Count Distribution by Business Line")
+ax[1].legend(wedges2, legend_labels2, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+###########33
+#seprate grapgh for loss and even counts
+import matplotlib.pyplot as plt
+
+# Prepare data
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()  # Use absolute values for Net Loss
+grouped_data = df.groupby('Business Line').agg({
+    'Net Loss Absolute': 'sum',  # Sum of absolute Net Loss
+    'Unique Event ID': 'count'   # Count of events
+}).rename(columns={'Unique Event ID': 'Event Count'})
+
+# Calculate percentages
+net_loss_percentage = grouped_data['Net Loss Absolute'] / grouped_data['Net Loss Absolute'].sum() * 100
+event_count_percentage = grouped_data['Event Count'] / grouped_data['Event Count'].sum() * 100
+
+# Define a custom color palette using a dictionary (for both pie charts)
+custom_colors = {
+    "Retail": "#ff9999",          # Light Red
+    "Corporate Banking": "#66b3ff",  # Light Blue
+    "Investment Banking": "#99ff99", # Light Green
+    "Insurance": "#ffcc99",        # Light Orange
+    "Wealth Management": "#ffb3e6", # Light Pink
+    "Asset Management": "#c2c2f0",  # Lavender
+    "Private Banking": "#ffb366",   # Light Yellow
+    "Credit Card Services": "#b3b3cc", # Light Grey
+    "Mortgage Lending": "#c4e17f",  # Light Greenish Yellow
+    "Financial Advisory": "#b38b6d"  # Brownish
+}
+
+# Separate Pie chart for Net Loss (Absolute)
+fig1, ax1 = plt.subplots(figsize=(7, 7))
+
+wedges1, texts1, autotexts1 = ax1.pie(
+    grouped_data['Net Loss Absolute'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index]  # Use custom colors
+)
+
+# Create legend with percentage values for Net Loss
+legend_labels1 = [f"{business_line}: {net_loss_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax1.set_title("Net Loss (Absolute) Distribution by Business Line")
+ax1.legend(wedges1, legend_labels1, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+
+# Separate Pie chart for Event Count
+fig2, ax2 = plt.subplots(figsize=(7, 7))
+
+wedges2, texts2, autotexts2 = ax2.pie(
+    grouped_data['Event Count'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index]  # Use custom colors
+)
+
+# Create legend with percentage values for Event Count
+legend_labels2 = [f"{business_line}: {event_count_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax2.set_title("Event Count Distribution by Business Line")
+ax2.legend(wedges2, legend_labels2, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+$$$$$$$4
+single single #danut chart
+import matplotlib.pyplot as plt
+
+# Prepare data
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()  # Use absolute values for Net Loss
+grouped_data = df.groupby('Business Line').agg({
+    'Net Loss Absolute': 'sum',  # Sum of absolute Net Loss
+    'Unique Event ID': 'count'   # Count of events
+}).rename(columns={'Unique Event ID': 'Event Count'})
+
+# Calculate percentages
+net_loss_percentage = grouped_data['Net Loss Absolute'] / grouped_data['Net Loss Absolute'].sum() * 100
+event_count_percentage = grouped_data['Event Count'] / grouped_data['Event Count'].sum() * 100
+
+# Define a custom color palette using a dictionary (for both doughnut charts)
+custom_colors = {
+    "Retail": "#ff9999",          # Light Red
+    "Corporate Banking": "#66b3ff",  # Light Blue
+    "Investment Banking": "#99ff99", # Light Green
+    "Insurance": "#ffcc99",        # Light Orange
+    "Wealth Management": "#ffb3e6", # Light Pink
+    "Asset Management": "#c2c2f0",  # Lavender
+    "Private Banking": "#ffb366",   # Light Yellow
+    "Credit Card Services": "#b3b3cc", # Light Grey
+    "Mortgage Lending": "#c4e17f",  # Light Greenish Yellow
+    "Financial Advisory": "#b38b6d"  # Brownish
+}
+
+# Separate Doughnut chart for Net Loss (Absolute)
+fig1, ax1 = plt.subplots(figsize=(7, 7))
+
+# Create a pie chart with a 'hole' in the center (Doughnut Chart)
+wedges1, texts1, autotexts1 = ax1.pie(
+    grouped_data['Net Loss Absolute'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index],  # Use custom colors
+    wedgeprops={'width': 0.3}  # Create a 'hole' by adjusting width
+)
+
+# Create legend with percentage values for Net Loss
+legend_labels1 = [f"{business_line}: {net_loss_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax1.set_title("Net Loss (Absolute) Distribution by Business Line")
+ax1.legend(wedges1, legend_labels1, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+
+# Separate Doughnut chart for Event Count
+fig2, ax2 = plt.subplots(figsize=(7, 7))
+
+# Create a pie chart with a 'hole' in the center (Doughnut Chart)
+wedges2, texts2, autotexts2 = ax2.pie(
+    grouped_data['Event Count'], 
+    labels=None,  # Suppress labels for clarity
+    autopct='%1.1f%%',  # Display percentage
+    startangle=140, 
+    colors=[custom_colors[bl] for bl in grouped_data.index],  # Use custom colors
+    wedgeprops={'width': 0.3}  # Create a 'hole' by adjusting width
+)
+
+# Create legend with percentage values for Event Count
+legend_labels2 = [f"{business_line}: {event_count_percentage[i]:.1f}%" for i, business_line in enumerate(grouped_data.index)]
+ax2.set_title("Event Count Distribution by Business Line")
+ax2.legend(wedges2, legend_labels2, title="Business Line", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+####
+eventype vs business line
+To visualize the event type distribution for each year within a single business line, you can follow these steps:
+
+Filter the data for the desired business line. Group the data by Event Type and Year. Plot the distribution of event types for each year using a stacked bar chart. Here’s how to do this with the data you have:
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+
+# Group by Year and Event Type, and count the occurrences
+event_type_yearly = business_line_data.groupby(['Year', 'Event Type']).size().unstack(fill_value=0)
+
+# Plot the stacked bar chart for Event Type Distribution for each year
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Stack bar chart with event types as separate bars
+event_type_yearly.plot(kind='bar', stacked=True, ax=ax, colormap='Set3')
+
+# Add labels and title
+ax.set_xlabel('Year')
+ax.set_ylabel('Event Count')
+ax.set_title(f'Event Type Distribution for Business Line "Retail" by Year')
+
+# Add legend
+ax.legend(title='Event Type', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_23380\765322414.py:8: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  business_line_data['Year'] = business_line_data['Date'].dt.year
+
+#show value
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+
+# Group by Year and Event Type, and count the occurrences
+event_type_yearly = business_line_data.groupby(['Year', 'Event Type']).size().unstack(fill_value=0)
+
+# Plot the stacked bar chart for Event Type Distribution for each year
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Stack bar chart with event types as separate bars
+bars = event_type_yearly.plot(kind='bar', stacked=True, ax=ax, colormap='Set3')
+
+# Add labels and title
+ax.set_xlabel('Year')
+ax.set_ylabel('Event Count')
+ax.set_title(f'Event Type Distribution for Business Line "Retail" by Year')
+
+# Add value labels to each bar segment
+for p in ax.patches:
+    height = p.get_height()
+    width = p.get_width()
+    x = p.get_x() + width / 2
+    y = p.get_y() + height / 2
+    
+    # Place the value label in the center of each segment
+    ax.text(x, y, str(int(height)), ha='center', va='center', fontsize=10, color='black')
+
+# Add legend
+ax.legend(title='Event Type', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_23380\2930297163.py:9: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  business_line_data['Year'] = business_line_data['Date'].dt.year
+
+#percentage
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+
+# Group by Year and Event Type, and count the occurrences
+event_type_yearly = business_line_data.groupby(['Year', 'Event Type']).size().unstack(fill_value=0)
+
+# Plot the stacked bar chart for Event Type Distribution for each year
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Stack bar chart with event types as separate bars
+bars = event_type_yearly.plot(kind='bar', stacked=True, ax=ax, colormap='Set3')
+
+# Add labels and title
+ax.set_xlabel('Year')
+ax.set_ylabel('Event Count')
+ax.set_title(f'Event Type Distribution for Business Line "Retail" by Year')
+
+# Add percentage labels to each bar segment
+for p in ax.patches:
+    height = p.get_height()
+    width = p.get_width()
+    x = p.get_x() + width / 2
+    y = p.get_y() + height / 2
+    
+    # Calculate the percentage for this segment
+    total_height = p.get_bbox().get_points()[1][1]  # Total height of the stack (sum of all segments for the year)
+    percentage = (height / total_height) * 100 if total_height != 0 else 0
+    
+    # Place the percentage label in the center of each segment
+    ax.text(x, y, f"{percentage:.1f}%", ha='center', va='center', fontsize=10, color='black')
+
+# Add legend
+ax.legend(title='Event Type', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_23380\2475035415.py:9: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  business_line_data['Year'] = business_line_data['Date'].dt.year
+
+#y axis in percentage
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+
+# Group by Year and Event Type, and count the occurrences
+event_type_yearly = business_line_data.groupby(['Year', 'Event Type']).size().unstack(fill_value=0)
+
+# Normalize the event counts to percentage (divide by the sum of events per year)
+event_type_yearly_percentage = event_type_yearly.div(event_type_yearly.sum(axis=1), axis=0) * 100
+
+# Plot the stacked bar chart for Event Type Distribution for each year as percentages
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Stack bar chart with event types as separate bars
+bars = event_type_yearly_percentage.plot(kind='bar', stacked=True, ax=ax, colormap='Set3')
+
+# Add labels and title
+ax.set_xlabel('Year')
+ax.set_ylabel('Percentage (%)')
+ax.set_title(f'Event Type Distribution for Business Line "Retail" by Year (Percentage)')
+
+# Add percentage labels to each bar segment
+for p in ax.patches:
+    height = p.get_height()
+    width = p.get_width()
+    x = p.get_x() + width / 2
+    y = p.get_y() + height / 2
+    
+    # Calculate the percentage for this segment (already calculated in event_type_yearly_percentage)
+    ax.text(x, y, f"{height:.1f}%", ha='center', va='center', fontsize=10, color='black')
+
+# Set Y-axis to range from 0 to 100
+ax.set_ylim(0, 100)
+
+# Add legend
+ax.legend(title='Event Type', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_23380\1598283121.py:9: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  business_line_data['Year'] = business_line_data['Date'].dt.year
+
+#i pie chart not visible good
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+
+# Group by Year and Event Type, and count the occurrences
+event_type_yearly = business_line_data.groupby(['Year', 'Event Type']).size().unstack(fill_value=0)
+
+# Normalize the event counts to percentage (divide by the sum of events per year)
+event_type_yearly_percentage = event_type_yearly.div(event_type_yearly.sum(axis=1), axis=0) * 100
+
+# Plot Pie charts for each year
+fig, axes = plt.subplots(1, len(event_type_yearly_percentage), figsize=(16, 8))
+
+# If there's only one year, axes will not be an array, so we handle that case
+if len(event_type_yearly_percentage) == 1:
+    axes = [axes]
+
+for i, (year, data) in enumerate(event_type_yearly_percentage.iterrows()):
+    # Plot pie chart for the year
+    wedges, texts, autotexts = axes[i].pie(
+        data, 
+        labels=data.index,  # Use event types as labels
+        autopct='%1.1f%%',  # Display percentage values
+        startangle=140, 
+        colors=plt.cm.Paired.colors[:len(data)]  # Use distinct colors for each event type
+    )
+    
+    # Set the title of each pie chart as the year
+    axes[i].set_title(f"Event Distribution for Year {year}")
+
+    # Add legend to the chart
+    axes[i].legend(wedges, data.index, title="Event Type", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+plt.tight_layout()
+plt.show()
+C:\Users\Himanshu Singh\AppData\Local\Temp\ipykernel_23380\2386830352.py:9: SettingWithCopyWarning: 
+A value is trying to be set on 
+
+
+###########333333
+percentage wise business line sn event typr by years
+graphql Copy code Year | Month | Event Type | Event Count
+2024 | 1 | Type A | 40 2024 | 1 | Type B | 30 2024 | 1 | Type C | 30 The total number of events for January 2024 is 40 + 30 + 30 = 100. The percentage distribution will be:
+
+Type A: (40 / 100) * 100 = 40% Type B: (30 / 100) * 100 = 30% Type C: (30 / 100) * 100 = 30% These percentages will then be displayed in the pie chart for that particular Year-Month.
+
+Let me know if you'd like further clarification or adjustments!
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+
+# Group by Year and Event Type, and count the occurrences
+event_type_yearly = business_line_data.groupby(['Year', 'Event Type']).size().unstack(fill_value=0)
+
+# Normalize the event counts to percentage (divide by the sum of events per year)
+event_type_yearly_percentage = event_type_yearly.div(event_type_yearly.sum(axis=1), axis=0) * 100
+
+# Plot Pie charts for each year
+for year in event_type_yearly_percentage.index:
+    # Create a new figure for each year
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # Data for the specific year
+    year_data = event_type_yearly_percentage.loc[year]
+
+    # Plot pie chart for the year without labels
+    wedges, texts, autotexts = ax.pie(
+        year_data, 
+        labels=None,  # Do not show labels on the pie chart
+        autopct='%1.1f%%',  # Display percentage values inside the pie chart
+        startangle=140, 
+        colors=plt.cm.Paired.colors[:len(year_data)]  # Use distinct colors for each event type
+    )
+
+    # Set the title of each pie chart as the year
+    ax.set_title(f"Event Distribution for Year {year}")
+
+    # Add legend with percentage for each event type
+    legend_labels = [f"{event_type}: {percentage:.1f}%" for event_type, percentage in zip(year_data.index, year_data)]
+    ax.legend(wedges, legend_labels, title="Event Type", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+    plt.tight_layout()
+    plt.show()
+#####
+by year anmd monthj
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Filter data for a specific business line, e.g., "Retail"
+business_line_data = df[df['Business Line'] == 'Retail']
+
+# Extract the year and month from the 'Date' column if not already done
+business_line_data['Year'] = business_line_data['Date'].dt.year
+business_line_data['Month'] = business_line_data['Date'].dt.month
+
+# Group by Year, Month, and Event Type, and count the occurrences
+event_type_monthly = business_line_data.groupby(['Year', 'Month', 'Event Type']).size().unstack(fill_value=0)
+
+# Normalize the event counts to percentage (divide by the sum of events per month for each year)
+event_type_monthly_percentage = event_type_monthly.div(event_type_monthly.sum(axis=1), axis=0) * 100
+
+# Plot Pie charts for each year and month
+for year in event_type_monthly_percentage.index.levels[0]:  # Iterate over each year
+    for month in range(1, 13):  # Iterate over each month
+        # Check if data exists for that specific month in the current year
+        if (year, month) in event_type_monthly_percentage.index:
+            # Create a new figure for each month
+            fig, ax = plt.subplots(figsize=(8, 8))
+
+            # Data for the specific year and month
+            year_month_data = event_type_monthly_percentage.loc[year, month]
+
+            # Plot pie chart for the specific month
+            wedges, texts, autotexts = ax.pie(
+                year_month_data, 
+                labels=None,  # Do not show labels on the pie chart
+                autopct='%1.1f%%',  # Display percentage values inside the pie chart
+                startangle=140, 
+                colors=plt.cm.Paired.colors[:len(year_month_data)]  # Use distinct colors for each event type
+            )
+
+            # Set the title of each pie chart as "Year-Month"
+            ax.set_title(f"Event Distribution for {year}-{month:02d}")
+
+            # Add legend with percentage for each event type
+            legend_labels = [f"{event_type}: {percentage:.1f}%" for event_type, percentage in zip(year_month_data.index, year_month_data)]
+            ax.legend(wedges, legend_labels, title="Event Type", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+            plt.tight_layout()
+            plt.show()
+#####
+#danut hcrat
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming df is your dataframe
+df['Year'] = df['Date'].dt.year  # Extract year if not already done
+
+# Group by Year and Event Type and sum the Net Loss Amount
+grouped_data = df.groupby(['Year', 'Event Type']).agg({
+    'Net Loss Amount': 'sum'
+}).reset_index()
+
+# Remove rows where 'Net Loss Amount' is zero or negative
+grouped_data = grouped_data[grouped_data['Net Loss Amount'] > 0]
+
+# Create a Doughnut chart for each year
+years = grouped_data['Year'].unique()
+for year in years:
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # Filter data for the current year
+    year_data = grouped_data[grouped_data['Year'] == year]
+
+    # Normalize the Net Loss for the current year
+    total_net_loss = year_data['Net Loss Amount'].sum()
+    year_data['Percentage'] = (year_data['Net Loss Amount'] / total_net_loss) * 100
+
+    # Doughnut chart for Net Loss distribution by Event Type (No labels on the chart itself)
+    wedges, texts, autotexts = ax.pie(
+        year_data['Net Loss Amount'],
+        labels=None,  # No labels on the chart itself
+        autopct='%1.1f%%',  # Show percentage on the pie chart
+        startangle=140,
+        colors=plt.cm.Paired.colors[:len(year_data)],
+        wedgeprops={'edgecolor': 'black', 'width': 0.3}  # Doughnut effect with width
+    )
+
+    # Title and show the Doughnut chart for the year
+    ax.set_title(f"Net Loss Distribution for {year}")
+    
+    # Legend showing Event Type and percentage
+    ax.legend(
+        wedges,
+        [f"{event}: {year_data[year_data['Event Type'] == event]['Percentage'].values[0]:.1f}%" for event in year_data['Event Type']],
+        title="Event Type",
+        loc="center left",
+        bbox_to_anchor=(1, 0, 0.5, 1)
+    )
+
+    plt.tight_layout()
+    plt.show()
+########
+year and month
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming df is your dataframe with 'Date' and 'Net Loss Amount' columns
+df['Year'] = df['Date'].dt.year  # Extract year
+df['Month'] = df['Date'].dt.month  # Extract month
+
+# Group by Year, Month, and Event Type and sum the Net Loss Amount
+grouped_data = df.groupby(['Year', 'Month', 'Event Type']).agg({
+    'Net Loss Amount': 'sum'
+}).reset_index()
+
+# Remove rows where 'Net Loss Amount' is zero or negative
+grouped_data = grouped_data[grouped_data['Net Loss Amount'] > 0]
+
+# Create a Doughnut chart for each year and month
+years = grouped_data['Year'].unique()
+months = grouped_data['Month'].unique()
+
+# Generate Doughnut charts for each Year
+for year in years:
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # Filter data for the current year
+    year_data = grouped_data[grouped_data['Year'] == year]
+
+    # Normalize the Net Loss for the current year
+    total_net_loss = year_data['Net Loss Amount'].sum()
+    year_data['Percentage'] = (year_data['Net Loss Amount'] / total_net_loss) * 100
+
+    # Doughnut chart for Net Loss distribution by Event Type (No labels on the chart itself)
+    wedges, texts, autotexts = ax.pie(
+        year_data['Net Loss Amount'],
+        labels=None,  # No labels on the chart itself
+        autopct='%1.1f%%',  # Show percentage on the pie chart
+        startangle=140,
+        colors=plt.cm.Paired.colors[:len(year_data)],
+        wedgeprops={'edgecolor': 'black', 'width': 0.3}  # Doughnut effect with width
+    )
+
+    # Title and show the Doughnut chart for the year
+    ax.set_title(f"Net Loss Distribution for {year}")
+    
+    # Legend showing Event Type and percentage
+    ax.legend(
+        wedges,
+        [f"{event}: {year_data[year_data['Event Type'] == event]['Percentage'].values[0]:.1f}%" for event in year_data['Event Type']],
+        title="Event Type",
+        loc="center left",
+        bbox_to_anchor=(1, 0, 0.5, 1)
+    )
+
+    plt.tight_layout()
+    plt.show()
+
+# Generate Doughnut charts for each Month of each Year
+for year in years:
+    for month in months:
+        fig, ax = plt.subplots(figsize=(8, 8))
+
+        # Filter data for the current year and month
+        month_data = grouped_data[(grouped_data['Year'] == year) & (grouped_data['Month'] == month)]
+
+        if month_data.empty:
+            continue  # Skip empty months if no data is available
+
+        # Normalize the Net Loss for the current year and month
+        total_net_loss = month_data['Net Loss Amount'].sum()
+        month_data['Percentage'] = (month_data['Net Loss Amount'] / total_net_loss) * 100
+
+        # Doughnut chart for Net Loss distribution by Event Type (No labels on the chart itself)
+        wedges, texts, autotexts = ax.pie(
+            month_data['Net Loss Amount'],
+            labels=None,  # No labels on the chart itself
+            autopct='%1.1f%%',  # Show percentage on the pie chart
+            startangle=140,
+            colors=plt.cm.Paired.colors[:len(month_data)],
+            wedgeprops={'edgecolor': 'black', 'width': 0.3}  # Doughnut effect with width
+        )
+
+        # Title and show the Doughnut chart for the month
+        ax.set_title(f"Net Loss Distribution for {year}-{month:02d}")
+        
+        # Legend showing Event Type and percentage
+        ax.legend(
+            wedges,
+            [f"{event}: {month_data[month_data['Event Type'] == event]['Percentage'].values[0]:.1f}%" for event in month_data['Event Type']],
+            title="Event Type",
+            loc="center left",
+            bbox_to_anchor=(1, 0, 0.5, 1)
+        )
+
+        plt.tight_layout()
+        plt.show()
+########3333
+outlier Histogram with Outlier Marking:
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Define threshold (e.g., 95th percentile) to identify outliers
+threshold = df['Net Loss Amount'].quantile(0.95)
+outliers = df[df['Net Loss Amount'] > threshold]
+
+# Plot histogram
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Net Loss Amount'], kde=True, color='blue', bins=30)
+plt.axvline(threshold, color='red', linestyle='--', label=f'Outlier Threshold: {threshold}')
+plt.title("Net Loss Amount Distribution with Outlier Threshold")
+plt.xlabel("Net Loss Amount")
+plt.ylabel("Frequency")
+plt.legend()
+plt.show()
+######33
+outlier voiln
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+plt.figure(figsize=(10, 6))
+sns.violinplot(x=df['Net Loss Amount'])
+plt.title("Violin Plot of Net Loss Amount with Outliers")
+plt.xlabel("Net Loss Amount")
+plt.show()
+### box
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Assuming df is the dataframe and 'Net Loss Amount' is the column of interest
+plt.figure(figsize=(10, 6))
+sns.boxplot(x=df['Net Loss Amount'])
+plt.title("Box Plot of Net Loss Amount with Outliers")
+plt.xlabel("Net Loss Amount")
+plt.show()
+####
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Assuming df is the dataframe and 'Net Loss Amount' is the column of interest
+threshold = df['Net Loss Amount'].quantile(0.95)  # Set outlier threshold
+outliers = df[df['Net Loss Amount'] > threshold]  # Identify outliers
+inliers = df[df['Net Loss Amount'] <= threshold]  # Non-outliers
+
+plt.figure(figsize=(14, 8))
+sns.scatterplot(x=inliers.index, y=inliers['Net Loss Amount'], color='blue', label='Inliers')
+sns.scatterplot(x=outliers.index, y=outliers['Net Loss Amount'], color='red', label='Outliers', s=100)
+plt.title("Net Loss Amount Distribution with Outliers Highlighted")
+plt.xlabel("Index")
+plt.ylabel("Net Loss Amount")
+plt.legend()
+plt.show()
+$$$$
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Calculate Z-scores
+df['Z-Score'] = (df['Net Loss Amount'] - df['Net Loss Amount'].mean()) / df['Net Loss Amount'].std()
+
+# Identify outliers (Z-score > 3 or < -3)
+outliers = df[np.abs(df['Z-Score']) > 3]
+inliers = df[np.abs(df['Z-Score']) <= 3]
+
+# Plot the scatter plot
+plt.figure(figsize=(14, 8))
+sns.scatterplot(x=inliers.index, y=inliers['Net Loss Amount'], color='blue', label='Inliers')
+sns.scatterplot(x=outliers.index, y=outliers['Net Loss Amount'], color='red', label='Outliers', s=100)
+plt.title("Net Loss Amount Distribution with Z-Score Based Outliers")
+plt.xlabel("Index")
+plt.ylabel("Net Loss Amount")
+plt.legend()
+plt.show()
