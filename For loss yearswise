@@ -1,0 +1,160 @@
+I need bar graph fro year wise net loss with loss value and percentage on bar graph with proper legened 
+ChatGPT said:
+ChatGPT
+Here’s a bar graph that displays year-wise Net Loss values with loss values and percentages displayed on the bars. This will also include a proper legend for clarity.
+
+Code Implementation
+python
+Copy code
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming `df` contains your data and `Net Loss Amount` and `Date` are the relevant columns
+# Filter for positive Net Loss values
+positive_df = df[df['Net Loss Amount'] > 0]
+
+# Extract year from the Date column
+positive_df['Year'] = pd.to_datetime(positive_df['Date']).dt.year
+
+# Group by year and calculate total Net Loss
+yearly_loss = positive_df.groupby('Year')['Net Loss Amount'].sum()
+
+# Calculate percentage contribution of each year
+total_loss = yearly_loss.sum()
+yearly_loss_percentage = (yearly_loss / total_loss) * 100
+
+# Plotting the bar graph
+fig, ax = plt.subplots(figsize=(12, 8))
+bars = ax.bar(yearly_loss.index, yearly_loss, color="skyblue", edgecolor="black")
+
+# Adding percentage and values on the bars
+for bar, value, percentage in zip(bars, yearly_loss, yearly_loss_percentage):
+    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02 * total_loss, 
+            f"{value:,.0f}\n({percentage:.2f}%)", ha='center', fontsize=10, color="black")
+
+# Adding labels, title, and legend
+ax.set_title("Year-wise Net Loss with Values and Percentages", fontsize=16, fontweight="bold")
+ax.set_xlabel("Year", fontsize=14)
+ax.set_ylabel("Net Loss Amount (in USD)", fontsize=14)
+ax.legend(["Net Loss Amount"], loc="upper right", fontsize=12)
+ax.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+Explanation of the Code
+Data Preparation:
+
+Filter for positive Net Loss values.
+Extract the year from the Date column.
+Group the data by year and calculate total Net Loss for each year.
+Compute the percentage contribution of each year's loss to the total loss.
+Bar Graph:
+
+Each bar represents the total Net Loss for a particular year.
+Values (Net Loss amount) and percentages are displayed on top of each bar.
+Legend:
+
+The legend explains the content of the graph (Net Loss Amount).
+Customization:
+
+Text annotations on the bars include both the value and percentage.
+A grid is added to enhance readability.
+Sample Output
+The graph will show:
+
+A bar for each year representing the Net Loss amount.
+Text annotations on each bar, such as:
+Value (e.g., 1,200,000)
+Percentage (e.g., (25.30%))
+Legend: "Net Loss Amount"
+Title: Clearly describes the chart's purpose.
+
+
+
+
+
+You said:
+Consider all the amount positive. Negative 
+ChatGPT said:
+ChatGPT
+If all amounts, including negative values, are to be considered as positive, we can use the absolute values of the Net Loss Amount column in the calculations and visualization. Here's the modified code:
+
+Code Implementation
+python
+Copy code
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Assuming `df` contains your data and `Net Loss Amount` and `Date` are relevant columns
+# Convert all Net Loss Amounts to absolute values
+df['Net Loss Absolute'] = df['Net Loss Amount'].abs()
+
+# Extract year from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+
+# Group by year and calculate total Net Loss
+yearly_loss = df.groupby('Year')['Net Loss Absolute'].sum()
+
+# Calculate percentage contribution of each year
+total_loss = yearly_loss.sum()
+yearly_loss_percentage = (yearly_loss / total_loss) * 100
+
+# Plotting the bar graph
+fig, ax = plt.subplots(figsize=(12, 8))
+bars = ax.bar(yearly_loss.index, yearly_loss, color="coral", edgecolor="black")
+
+# Adding percentage and values on the bars
+for bar, value, percentage in zip(bars, yearly_loss, yearly_loss_percentage):
+    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02 * total_loss, 
+            f"{value:,.0f}\n({percentage:.2f}%)", ha='center', fontsize=10, color="black")
+
+# Adding labels, title, and legend
+ax.set_title("Year-wise Net Loss (Absolute) with Values and Percentages", fontsize=16, fontweight="bold")
+ax.set_xlabel("Year", fontsize=14)
+ax.set_ylabel("Net Loss Amount (Absolute, in USD)", fontsize=14)
+ax.legend(["Net Loss Amount"], loc="upper right", fontsize=12)
+ax.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Show the plot
+plt.tight_layout()
+plt.show()
+Explanation of the Changes
+Absolute Values:
+
+All Net Loss Amounts are converted to positive values using the .abs() method.
+This ensures both positive and negative amounts are treated equally.
+Data Grouping:
+
+Grouped data by Year to calculate total yearly Net Loss (absolute values).
+Annotations:
+
+The graph includes annotations on each bar displaying:
+The total Net Loss (absolute value).
+The percentage contribution of that year's loss to the total.
+Bar Colors:
+
+Used a consistent and visually distinct color ("coral") for the bars.
+Output
+Bar Chart:
+Each bar represents the total Net Loss (absolute value) for a particular year.
+Text on the bars shows both the absolute Net Loss value and its percentage of the total.
+Legend:
+Explains the data being visualized (Net Loss Amount).
+Gridlines:
+Horizontal gridlines improve readability of the chart.
+Let me know if you'd like further customizations!
+
+
+2/2
+
+
+
+
+
+
+
+
+
+
+ChatGPT can make mistakes. Check 
