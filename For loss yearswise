@@ -1,3 +1,62 @@
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Example DataFrame
+data = {
+    'Date': ['2021-01-15', '2021-07-30', '2022-03-10', '2022-11-20', '2023-06-15'],
+    'Net Loss Amount': [10000, 15000, 20000, 25000, 30000]
+}
+df = pd.DataFrame(data)
+
+# Extract the year from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+
+# Calculate yearly total net loss and percentage
+yearly_loss = df.groupby('Year')['Net Loss Amount'].sum().reset_index()
+total_loss = yearly_loss['Net Loss Amount'].sum()
+yearly_loss['Percentage'] = (yearly_loss['Net Loss Amount'] / total_loss) * 100
+
+# Plot the data
+plt.figure(figsize=(12, 8))
+bars = plt.bar(
+    yearly_loss['Year'],
+    yearly_loss['Net Loss Amount'],
+    color='steelblue',
+    edgecolor='black',
+    alpha=0.8
+)
+
+# Annotate the bars with values and percentages
+for bar, loss, pct in zip(bars, yearly_loss['Net Loss Amount'], yearly_loss['Percentage']):
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        f"{loss:,.0f}\n({pct:.1f}%)",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color="black"
+    )
+
+# Title and labels
+plt.title("Year-wise Net Loss (Values and Percentages)", fontsize=16, fontweight="bold")
+plt.xlabel("Year", fontsize=14)
+plt.ylabel("Net Loss Amount", fontsize=14)
+
+# Set x-axis ticks to be integers (years)
+plt.xticks(yearly_loss['Year'], fontsize=12)
+
+# Add gridlines
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+# Display the plot
+plt.tight_layout()
+plt.show()
+
+
+
 ***
 value count and percenon loss by month and same for event count
 Here's an enhanced version of the bar graph that includes event count values and percentages on each bar as labels as well as a legend indicating what the bars and percentages represent.
