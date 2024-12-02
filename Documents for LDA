@@ -1,4 +1,79 @@
+###
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
+# Sample DataFrame
+np.random.seed(42)
+data = {
+    'Date': pd.date_range(start='2019-01-01', end='2022-12-31', freq='M'),
+    'Business Line': np.random.choice(['Retail', 'Corporate', 'SME', 'Investment'], size=48),
+    'Event Count': np.random.randint(1, 50, size=48),
+    'Net Loss Amount': np.random.randint(1000, 100000, size=48)
+}
+df = pd.DataFrame(data)
+
+# Extract the year from the Date column
+df['Year'] = pd.to_datetime(df['Date']).dt.year
+
+# Group by Business Line and Year, and aggregate totals
+yearly_data = df.groupby(['Business Line', 'Year']).agg({
+    'Event Count': 'sum',
+    'Net Loss Amount': 'sum'
+}).reset_index()
+
+# Get unique business lines for creating subplots
+business_lines = yearly_data['Business Line'].unique()
+
+# Set up subplots
+fig, axes = plt.subplots(len(business_lines), 1, figsize=(10, 6 * len(business_lines)), sharex=True)
+
+# Iterate through each business line and plot
+for idx, business_line in enumerate(business_lines):
+    ax = axes[idx]
+    data = yearly_data[yearly_data['Business Line'] == business_line]
+    
+    # Create a second y-axis
+    ax2 = ax.twinx()
+
+    # Total values for percentage calculation
+    total_event_count = data['Event Count'].sum()
+    total_net_loss = data['Net Loss Amount'].sum()
+    
+    # Plot Event Count on the left y-axis
+    ax.plot(
+        data['Year'], data['Event Count'], marker='o', label='Event Count', color='blue', linestyle='--'
+    )
+    for x, y in zip(data['Year'], data['Event Count']):
+        percentage = (y / total_event_count) * 100
+        ax.text(x, y, f"{y}\n({percentage:.1f}%)", color='blue', fontsize=10, ha='center')
+
+    # Plot Net Loss on the right y-axis
+    ax2.plot(
+        data['Year'], data['Net Loss Amount'], marker='o', label='Net Loss Amount', color='red', linestyle='-'
+    )
+    for x, y in zip(data['Year'], data['Net Loss Amount']):
+        percentage = (y / total_net_loss) * 100
+        ax2.text(x, y, f"{y:.0f}\n({percentage:.1f}%)", color='red', fontsize=10, ha='center')
+    
+    # Add titles and legends
+    ax.set_title(f"Yearly Event Count and Net Loss for {business_line}", fontsize=14, fontweight='bold')
+    ax.set_xlabel('Year', fontsize=12)
+    ax.set_ylabel('Event Count', fontsize=12, color='blue')
+    ax2.set_ylabel('Net Loss Amount', fontsize=12, color='red')
+    
+    # Set legends for both axes
+    ax.legend(fontsize=10, loc='upper left')
+    ax2.legend(fontsize=10, loc='upper right')
+    
+    # Add grid lines
+    ax.grid(axis='both', linestyle='--', alpha=0.6)
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+
+###
 
 import matplotlib.pyplot as plt
 import pandas as pd
