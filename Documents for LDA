@@ -1,4 +1,134 @@
+####
+Log and natural Logarithmic value of a column in Pandas – Python
+Last Updated : 03 Dec, 2023
+This article explores the computation of logarithmic and natural logarithmic values for a column in Pandas using Python.
 
+What is Log and Natural Logarithmic?
+A logarithm is a mathematical function that represents the exponent to which a base must be raised to produce a given number. The logarithm of a number x to the base b is denoted as log_b(x), and it signifies the power to which b must be raised to obtain x. Natural logarithm, denoted as ln(x) or log_e(x), uses the base e, where e is the mathematical constant approximately equal to 2.71828. Natural logarithms are commonly used in mathematical and scientific contexts. They have applications in areas such as calculus, probability, and solving exponential growth and decay problems.
+
+Creating Simple DataFrame
+The log and natural logarithmic value of a column in pandas can be calculated using the log(), log2(), and log10() numpy functions respectively. Before applying the functions, we need to create a Pandas Data frame.
+
+
+
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+  
+# Dictionary
+data = {
+     'Name': ['Geek1', 'Geek2',
+             'Geek3', 'Geek4'],
+   'Salary': [18000, 20000, 
+             15000, 35000]} 
+ 
+# Create a dataframe
+data = pd.DataFrame(data,
+                    columns = ['Name', 
+                               'Salary'])
+ 
+# Show the dataframe
+data
+Output:
+
+   Name  Salary
+0  Geek1   18000
+1  Geek2   20000
+2  Geek3   15000
+3  Geek4   35000
+Log and Natural Logarithmic value of a column in Pandas
+Here we are discussing some generally used logarithmic and natural logarithmic values of a column in Pandas, which are as follows.
+
+Log on base 2 value of a column in Pandas
+Log on base 10 value of a column in Pandas
+Natural logarithmic value of a column in Pandas
+Log value of a Column in Pandas
+Logarithm on base 2 value of a column in Pandas
+After the dataframe is created, we can apply numpy.log2() function to the columns. In this case, we will be finding the logarithm values of the column salary. The computed values are stored in the new column “logarithm_base2”. 
+
+
+
+
+# Calculate logarithm to base 2 
+# on 'Salary' column
+data['logarithm_base2'] = np.log2(data['Salary'])
+ 
+# Show the dataframe
+print(data)
+Output :
+
+   Name  Salary  logarithm_base2
+0  Geek1   18000        14.135709
+1  Geek2   20000        14.287712
+2  Geek3   15000        13.872675
+3  Geek4   35000        15.095067
+
+Logarithm on base 10 value of a column in Pandas
+To find the logarithm on base 10 values we can apply numpy.log10() function to the columns. In this case, we will be finding the logarithm values of the column salary. The computed values are stored in the new column “logarithm_base10”. 
+
+
+
+
+# Calculate logarithm to 
+# base 10 on 'Salary' column
+data['logarithm_base10'] = np.log10(data['Salary'])
+ 
+# Show the dataframe
+print(data)
+Output :
+
+   Name  Salary   logarithm_base10
+0  Geek1   18000         4.255273
+1  Geek2   20000         4.301030
+2  Geek3   15000         4.176091
+3  Geek4   35000         4.544068
+Natural logarithmic value of a column in Pandas
+To find the natural logarithmic values we can apply numpy.log() function to the columns. In this case, we will be finding the natural logarithm values of the column salary. The computed values are stored in the new column “natural_log“. 
+
+
+
+
+# Calculate natural logarithm on
+# 'Salary' column
+data['natural_log'] = np.log(data['Salary'])
+ 
+# Show the dataframe
+print(data)
+Output :
+
+   Name  Salary  natural_log
+0  Geek1   18000     9.798127
+1  Geek2   20000     9.903488
+2  Geek3   15000     9.615805
+3  Geek4   35000    10.463103
+Log value of a Column in Pandas
+In this example the Python code uses Pandas to create a dataframe (‘Column_Name’). It imports the log function from the math module to compute natural logarithmic values for the column. Results are stored in ‘Log_Values,’ and the updated dataframe is displayed.
+
+
+
+
+import pandas as pd
+from math import log  # Import the log function from the math module
+ 
+# Creating a sample dataframe
+data = {'Column_Name': [2, 4, 8, 16, 32]}
+df = pd.DataFrame(data)
+ 
+# Calculating logarithmic values for the specified column
+df['Log_Values'] = df['Column_Name'].apply(lambda x: log(x))
+ 
+# Displaying the resulting dataframe
+print(df)
+Output :
+
+Column_Name  Log_Values
+0            2    0.693147
+1            4    1.386294
+2            8    2.079442
+3           16    2.772589
+4           32    3.465736
+###
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
