@@ -1,3 +1,30 @@
+
+##
+To increase the output window size in Jupyter Notebook, you can adjust the settings using the following steps:
+
+For all output in Jupyter Notebooks: You can set the display width and height of output cells using IPython.display and matplotlib.
+
+python
+Copy code
+from IPython.core.display import display, HTML
+display(HTML("<style>.output_scroll {height: 500px;}</style>"))
+You can adjust the height value to whatever size you prefer (e.g., 500px, 800px).
+
+For larger matplotlib plots: You can set the default size for plots directly.
+
+python
+Copy code
+import matplotlib.pyplot as plt
+plt.rcParams['figure.figsize'] = (12, 8)  # Set the figure size
+Adjust the values (12, 8) to your desired dimensions.
+
+For controlling the width of code cells: You can also modify the notebook's default layout using CSS like this:
+
+python
+Copy code
+display(HTML("<style>.container { width: 100% !important; }</style>"))
+This will help expand the content and make better use of your screen real estate. You can modify the specific values as needed.
+
 ####
 Log and natural Logarithmic value of a column in Pandas – Python
 Last Updated : 03 Dec, 2023
