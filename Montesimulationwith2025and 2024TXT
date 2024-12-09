@@ -1,3 +1,130 @@
+
+######
+import pandas as pd
+import numpy as np
+from scipy.stats import poisson, lognorm
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
+# Function to calculate VaR for Net Loss using Monte Carlo
+def calculate_net_loss_var(frequency_lambda, severity_shape, severity_scale, severity_loc, confidence_level=0.999, n_simulations=10000):
+    simulated_event_counts = poisson.rvs(mu=frequency_lambda, size=n_simulations)
+    simulated_loss_amounts = lognorm.rvs(s=severity_shape, loc=severity_loc, scale=severity_scale, size=n_simulations)
+    total_losses = simulated_event_counts * simulated_loss_amounts
+    var_value = np.percentile(total_losses, confidence_level * 100)
+    return var_value
+
+# Function to calculate VaR for Event Counts using Monte Carlo
+def calculate_event_count_var(frequency_lambda, confidence_level=0.999, n_simulations=10000):
+    simulated_event_counts = poisson.rvs(mu=frequency_lambda, size=n_simulations)
+    var_event_count = np.percentile(simulated_event_counts, confidence_level * 100)
+    return var_event_count
+
+# Add Quarter column to the DataFrame
+df['Quarter'] = df['Date'].dt.to_period('Q')
+
+# Prepare results for Monte Carlo Simulation (up to Q3 2024)
+simulation_results = []
+
+# Define confidence level and number of simulations
+confidence_level = 0.999
+n_simulations = 10000
+
+# Loop through each year, quarter, and business line up to Q3 2024
+for year in range(2021, 2025):
+    yearly_data = df[df['Year'] == year]
+    
+    for quarter in yearly_data['Quarter'].unique():
+        if str(quarter) == "2024Q4":  # Exclude Q4 2024 for simulation
+            continue
+        
+        quarterly_data = yearly_data[yearly_data['Quarter'] == quarter]
+        
+        for business_line in quarterly_data['Business Line'].unique():
+            bl_data = quarterly_data[quarterly_data['Business Line'] == business_line]
+            
+            total_event_count = bl_data.shape[0]
+            total_net_loss = bl_data['Net Loss Amount'].sum()
+            
+            frequency_lambda = total_event_count / 1  # Events per quarter
+            
+            positive_losses = bl_data[bl_data['Net Loss Amount'] > 0]['Net Loss Amount']
+            if positive_losses.empty:
+                print(f"No positive losses for {business_line} in {quarter} {year}. Skipping.")
+                continue
+            
+            severity_shape, severity_loc, severity_scale = lognorm.fit(positive_losses)
+            
+            # Calculate VaR for Net Loss
+            var_net_loss = calculate_net_loss_var(
+                frequency_lambda=frequency_lambda,
+                severity_shape=severity_shape,
+                severity_scale=severity_scale,
+                severity_loc=severity_loc,
+                confidence_level=confidence_level,
+                n_simulations=n_simulations
+            )
+            
+            # Calculate VaR for Event Count
+            var_event_count = calculate_event_count_var(
+                frequency_lambda=frequency_lambda,
+                confidence_level=confidence_level,
+                n_simulations=n_simulations
+            )
+            
+            # Append results
+            simulation_results.append({
+                'Year': year,
+                'Quarter': quarter,
+                'Business Line': business_line,
+                'Actual Total Net Loss': total_net_loss,
+                'Actual Total Event Count': total_event_count,
+                'VaR Net Loss (99.9%)': var_net_loss,
+                'VaR Event Count (99.9%)': var_event_count
+            })
+
+# Convert simulation results to DataFrame
+simulation_results_df = pd.DataFrame(simulation_results)
+
+# Prepare data for time series forecasting (prediction for Q4 2024)
+forecast_data = simulation_results_df.groupby(['Quarter', 'Business Line']).sum().reset_index()
+
+# Function for predicting 2024 Q4
+def forecast_next_quarter(data, business_line, metric):
+    ts_data = data[data['Business Line'] == business_line].sort_values('Quarter')
+    ts_data.set_index('Quarter', inplace=True)
+    
+    # Initialize and fit the model
+    model = ExponentialSmoothing(ts_data[metric], seasonal='add', seasonal_periods=4)
+    fitted_model = model.fit()
+    
+    # Forecast for 2024 Q4
+    forecast = fitted_model.forecast(1)
+    return forecast.values[0]
+
+# Forecast for 2024 Q4 for each business line
+forecast_results = []
+for business_line in simulation_results_df['Business Line'].unique():
+    predicted_net_loss_2024Q4 = forecast_next_quarter(forecast_data, business_line, 'Actual Total Net Loss')
+    predicted_event_count_2024Q4 = forecast_next_quarter(forecast_data, business_line, 'Actual Total Event Count')
+    
+    forecast_results.append({
+        'Year': 2024,
+        'Quarter': '2024Q4',
+        'Business Line': business_line,
+        'Predicted Total Net Loss': predicted_net_loss_2024Q4,
+        'Predicted Total Event Count': predicted_event_count_2024Q4,
+        'Actual Total Net Loss': None,  # Placeholder
+        'Actual Total Event Count': None
+    })
+
+# Combine results for simulation and forecasting
+forecast_df = pd.DataFrame(forecast_results)
+final_results_df = pd.concat([simulation_results_df, forecast_df], ignore_index=True)
+
+# Display final results
+print(final_results_df)
+
+##
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
